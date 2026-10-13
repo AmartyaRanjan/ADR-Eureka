@@ -1,0 +1,18 @@
+
+## DRshift
+worst10% mm (PRIMARY)    G n=10   256.80± 197.87 | placebo n=10   381.94± 289.19 | diff  -125.14 p=0.281
+mean err mm              G n=10    53.03±  19.38 | placebo n=10    72.18±  47.44 | diff   -19.15 p=0.280
+5cm %                    G n=10    97.04±   2.29 | placebo n=10    93.69±   6.89 | diff    +3.34 p=0.181
+2cm %                    G n=10    14.10±   4.25 | placebo n=10    15.85±  12.82 | diff    -1.75 p=0.683
+
+## nominal
+worst10% mm (PRIMARY)    G n=10    81.32±  27.56 | placebo n=10    74.10±  33.57 | diff    +7.21 p=0.622
+mean err mm              G n=10    33.02±   3.94 | placebo n=10    31.79±   3.62 | diff    +1.22 p=0.479
+5cm %                    G n=10    94.04±   3.61 | placebo n=10    95.11±   2.91 | diff    -1.08 p=0.475
+2cm %                    G n=10    23.37±   6.52 | placebo n=10    23.94±   6.43 | diff    -0.56 p=0.847
+
+## DRtrain
+worst10% mm (PRIMARY)    G n=10    77.21±  26.64 | placebo n=10    71.45±  30.72 | diff    +5.76 p=0.657
+mean err mm              G n=10    33.66±   2.46 | placebo n=10    32.53±   4.35 | diff    +1.13 p=0.483
+5cm %                    G n=10    99.27±   0.65 | placebo n=10    99.46±   0.37 | diff    -0.19 p=0.488
+2cm %                    G n=10    17.85±   4.67 | placebo n=10    20.27±  12.20 | diff    -2.43 p=0.567

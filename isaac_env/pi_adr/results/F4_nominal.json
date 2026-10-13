@@ -1,0 +1,52 @@
+{
+  "extra": {
+    "checkpoint": "logs/rl_games/two_dof_reach/2026-10-10_19-34-25/nn/last_two_dof_reach_ep_800_rew_27211.11.pth",
+    "domain_rand": {
+      "actuator_effectiveness_range": [
+        1.0,
+        1.0
+      ],
+      "enabled": false,
+      "joint_damping_scale_range": [
+        1.0,
+        1.0
+      ],
+      "joint_friction_range": [
+        0.0,
+        0.0
+      ],
+      "link_mass_scale_range": [
+        1.0,
+        1.0
+      ]
+    },
+    "eval_seed": 1234,
+    "eval_wall_clock_s": 7.1,
+    "note": "rung F4, precision-gated (2cm, target=0.30), step_frac=0.10, nominal physics",
+    "num_envs": 4096,
+    "reward_variant": "eureka",
+    "task": "PIADR-TwoDofReach-Eureka-v0",
+    "timestamp": "2026-10-10T19:39:00"
+  },
+  "max_joint_velocity_rad_s": 5.145919322967529,
+  "mean_abs_action": 0.6143536567687988,
+  "mean_control_effort": 0.9620570540428162,
+  "mean_joint_velocity_rad_s": 2.7981088161468506,
+  "mean_overshoot_m": 0.08695456385612488,
+  "mean_settling_time_s": 1.8274496793746948,
+  "mean_terminal_error_m": 0.06245186924934387,
+  "median_terminal_error_m": 0.027234312146902084,
+  "metrics_version": "1.0.0",
+  "num_episodes": 4096,
+  "p90_terminal_error_m": 0.04158724471926689,
+  "run_name": "F4_nominal",
+  "success_rate": {
+    "0.001": 0.000244140625,
+    "0.002": 0.00244140625,
+    "0.005": 0.011962890625,
+    "0.01": 0.053466796875,
+    "0.02": 0.255859375,
+    "0.05": 0.953857421875
+  },
+  "worst_decile_error_m": 0.4005142152309418
+}

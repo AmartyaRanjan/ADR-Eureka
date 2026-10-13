@@ -1,0 +1,52 @@
+{
+  "extra": {
+    "checkpoint": "logs/rl_games/two_dof_reach/2026-10-10_17-05-24/nn/last_two_dof_reach_ep_800_rew_26998.062.pth",
+    "domain_rand": {
+      "actuator_effectiveness_range": [
+        1.0,
+        1.0
+      ],
+      "enabled": false,
+      "joint_damping_scale_range": [
+        1.0,
+        1.0
+      ],
+      "joint_friction_range": [
+        0.0,
+        0.0
+      ],
+      "link_mass_scale_range": [
+        1.0,
+        1.0
+      ]
+    },
+    "eval_seed": 1234,
+    "eval_wall_clock_s": 7.91,
+    "note": "rung D, nominal physics, 800 total PPO iters, 2048 train envs",
+    "num_envs": 4096,
+    "reward_variant": "eureka",
+    "task": "PIADR-TwoDofReach-Eureka-v0",
+    "timestamp": "2026-10-10T17:36:30"
+  },
+  "max_joint_velocity_rad_s": 5.147278308868408,
+  "mean_abs_action": 0.4672231078147888,
+  "mean_control_effort": 0.6507659554481506,
+  "mean_joint_velocity_rad_s": 2.491380214691162,
+  "mean_overshoot_m": 0.11383930593729019,
+  "mean_settling_time_s": 1.168074607849121,
+  "mean_terminal_error_m": 0.03052597865462303,
+  "median_terminal_error_m": 0.02604527212679386,
+  "metrics_version": "1.0.0",
+  "num_episodes": 4096,
+  "p90_terminal_error_m": 0.041086919605731964,
+  "run_name": "D_nominal",
+  "success_rate": {
+    "0.001": 0.000732421875,
+    "0.002": 0.00244140625,
+    "0.005": 0.014892578125,
+    "0.01": 0.087646484375,
+    "0.02": 0.324951171875,
+    "0.05": 0.977783203125
+  },
+  "worst_decile_error_m": 0.08987565338611603
+}

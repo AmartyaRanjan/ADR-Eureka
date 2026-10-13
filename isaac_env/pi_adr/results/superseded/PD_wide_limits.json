@@ -1,0 +1,30 @@
+{
+  "extra": {
+    "controller": "IK + PD (kp=12.0, kd=1.2)",
+    "eval_seed": 1234,
+    "note": "scripted reference: precision ceiling of the environment, not a learned policy",
+    "num_envs": 2048,
+    "timestamp": "2026-09-16T02:52:13"
+  },
+  "max_joint_velocity_rad_s": 5.095357894897461,
+  "mean_abs_action": 0.013858267106115818,
+  "mean_control_effort": 0.012781632132828236,
+  "mean_joint_velocity_rad_s": 0.15503330528736115,
+  "mean_overshoot_m": 0.002751676831394434,
+  "mean_settling_time_s": 0.7683432102203369,
+  "mean_terminal_error_m": 2.3096474706107983e-06,
+  "median_terminal_error_m": 1.9073486328125e-06,
+  "metrics_version": "1.0.0",
+  "num_episodes": 2048,
+  "p90_terminal_error_m": 4.2649612623790745e-06,
+  "run_name": "PD_wide_limits",
+  "success_rate": {
+    "0.001": 1.0,
+    "0.002": 1.0,
+    "0.005": 1.0,
+    "0.01": 1.0,
+    "0.02": 1.0,
+    "0.05": 1.0
+  },
+  "worst_decile_error_m": 6.689517249469645e-06
+}

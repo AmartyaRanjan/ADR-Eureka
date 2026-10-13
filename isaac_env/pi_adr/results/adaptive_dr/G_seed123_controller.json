@@ -1,0 +1,239 @@
+{
+  "initial_ranges": {
+    "friction": [
+      0.0,
+      0.25
+    ],
+    "damping_scale": [
+      0.5,
+      4.0
+    ],
+    "effectiveness": [
+      0.5,
+      1.0
+    ],
+    "mass_scale": [
+      1.0,
+      1.5
+    ]
+  },
+  "c_rapp": {
+    "friction": [
+      0.0,
+      4.0
+    ],
+    "damping_scale": [
+      0.25,
+      256.0
+    ],
+    "effectiveness": [
+      0.3,
+      1.0
+    ],
+    "mass_scale": [
+      1.0,
+      4.0
+    ]
+  },
+  "success_target": 0.3,
+  "step_frac": 0.1,
+  "narrow_frac": 0.15,
+  "patience": 2,
+  "final_state": {
+    "ranges": {
+      "friction": [
+        0.0,
+        0.36712447062576414
+      ],
+      "damping_scale": [
+        0.5,
+        20.51781723847404
+      ],
+      "effectiveness": [
+        0.48668884062499995,
+        1.0
+      ],
+      "mass_scale": [
+        1.0,
+        1.5554631640625
+      ]
+    },
+    "stalled_count": {
+      "friction": 7,
+      "damping_scale": 7,
+      "effectiveness": 7,
+      "mass_scale": 7
+    },
+    "outer_iteration": 8
+  },
+  "history": [
+    {
+      "outer_iteration": 0,
+      "success": {
+        "friction": 0.3349609375,
+        "damping_scale": 0.3056640625,
+        "effectiveness": 0.4736328125,
+        "mass_scale": 0.375
+      },
+      "action": {
+        "friction": "widen upper 0.2500 -> 0.5140",
+        "damping_scale": "widen upper 4.0000 -> 41.2270",
+        "effectiveness": "widen lower 0.5000 -> 0.4700",
+        "mass_scale": "widen upper 1.5000 -> 1.6250"
+      },
+      "step_multiplier": {
+        "friction": 0.7039174715058303,
+        "damping_scale": 1.4772618663083599,
+        "effectiveness": 1.5,
+        "mass_scale": 0.5
+      }
+    },
+    {
+      "outer_iteration": 1,
+      "success": {
+        "friction": 0.2197265625,
+        "damping_scale": 0.220703125,
+        "effectiveness": 0.2998046875,
+        "mass_scale": 0.2919921875
+      },
+      "action": {
+        "friction": "stalled 1x (<= patience, hold)",
+        "damping_scale": "stalled 1x (<= patience, hold)",
+        "effectiveness": "stalled 1x (<= patience, hold)",
+        "mass_scale": "stalled 1x (<= patience, hold)"
+      },
+      "step_multiplier": {
+        "friction": 0.5,
+        "damping_scale": 1.5,
+        "effectiveness": 0.5,
+        "mass_scale": 0.5
+      }
+    },
+    {
+      "outer_iteration": 2,
+      "success": {
+        "friction": 0.1767578125,
+        "damping_scale": 0.1875,
+        "effectiveness": 0.212890625,
+        "mass_scale": 0.181640625
+      },
+      "action": {
+        "friction": "stalled 2x (<= patience, hold)",
+        "damping_scale": "stalled 2x (<= patience, hold)",
+        "effectiveness": "stalled 2x (<= patience, hold)",
+        "mass_scale": "stalled 2x (<= patience, hold)"
+      },
+      "step_multiplier": {
+        "friction": 0.5,
+        "damping_scale": 1.5,
+        "effectiveness": 0.5,
+        "mass_scale": 0.5
+      }
+    },
+    {
+      "outer_iteration": 3,
+      "success": {
+        "friction": 0.1640625,
+        "damping_scale": 0.14453125,
+        "effectiveness": 0.1708984375,
+        "mass_scale": 0.1337890625
+      },
+      "action": {
+        "friction": "stalled 3x -> narrow to (0.0, 0.4743736940424835)",
+        "damping_scale": "stalled 3x -> narrow to (0.5, 35.642949176325075)",
+        "effectiveness": "stalled 3x -> narrow to (0.4745, 1.0)",
+        "mass_scale": "stalled 3x -> narrow to (1.0, 1.60625)"
+      },
+      "step_multiplier": {
+        "friction": 0.5,
+        "damping_scale": 1.5,
+        "effectiveness": 0.5,
+        "mass_scale": 0.5
+      }
+    },
+    {
+      "outer_iteration": 4,
+      "success": {
+        "friction": 0.109375,
+        "damping_scale": 0.0927734375,
+        "effectiveness": 0.115234375,
+        "mass_scale": 0.099609375
+      },
+      "action": {
+        "friction": "stalled 4x -> narrow to (0.0, 0.44071763993611096)",
+        "damping_scale": "stalled 4x -> narrow to (0.5, 30.896506799876313)",
+        "effectiveness": "stalled 4x -> narrow to (0.478325, 1.0)",
+        "mass_scale": "stalled 4x -> narrow to (1.0, 1.5903125)"
+      },
+      "step_multiplier": {
+        "friction": 0.5,
+        "damping_scale": 1.5,
+        "effectiveness": 0.5,
+        "mass_scale": 0.5
+      }
+    },
+    {
+      "outer_iteration": 5,
+      "success": {
+        "friction": 0.1162109375,
+        "damping_scale": 0.138671875,
+        "effectiveness": 0.1142578125,
+        "mass_scale": 0.11328125
+      },
+      "action": {
+        "friction": "stalled 5x -> narrow to (0.0, 0.4121099939456943)",
+        "damping_scale": "stalled 5x -> narrow to (0.5, 26.862030779894866)",
+        "effectiveness": "stalled 5x -> narrow to (0.48157625, 1.0)",
+        "mass_scale": "stalled 5x -> narrow to (1.0, 1.576765625)"
+      },
+      "step_multiplier": {
+        "friction": 0.5,
+        "damping_scale": 1.5,
+        "effectiveness": 0.5,
+        "mass_scale": 0.5
+      }
+    },
+    {
+      "outer_iteration": 6,
+      "success": {
+        "friction": 0.1904296875,
+        "damping_scale": 0.1904296875,
+        "effectiveness": 0.22265625,
+        "mass_scale": 0.1962890625
+      },
+      "action": {
+        "friction": "stalled 6x -> narrow to (0.0, 0.3877934948538402)",
+        "damping_scale": "stalled 6x -> narrow to (0.5, 23.432726162910637)",
+        "effectiveness": "stalled 6x -> narrow to (0.48433981249999997, 1.0)",
+        "mass_scale": "stalled 6x -> narrow to (1.0, 1.56525078125)"
+      },
+      "step_multiplier": {
+        "friction": 0.5,
+        "damping_scale": 1.5,
+        "effectiveness": 0.5,
+        "mass_scale": 0.5
+      }
+    },
+    {
+      "outer_iteration": 7,
+      "success": {
+        "friction": 0.16015625,
+        "damping_scale": 0.1474609375,
+        "effectiveness": 0.154296875,
+        "mass_scale": 0.1171875
+      },
+      "action": {
+        "friction": "stalled 7x -> narrow to (0.0, 0.36712447062576414)",
+        "damping_scale": "stalled 7x -> narrow to (0.5, 20.51781723847404)",
+        "effectiveness": "stalled 7x -> narrow to (0.48668884062499995, 1.0)",
+        "mass_scale": "stalled 7x -> narrow to (1.0, 1.5554631640625)"
+      },
+      "step_multiplier": {
+        "friction": 0.5,
+        "damping_scale": 1.5,
+        "effectiveness": 0.5,
+        "mass_scale": 0.5
+      }
+    }
+  ]
+}

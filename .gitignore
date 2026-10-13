@@ -1,0 +1,33 @@
+# Virtual environments
+.venv*/
+isaac_env/env_isaaclab/
+
+# Third-party repos (clone separately, see README)
+isaac_env/IsaacLab/
+isaac_env/IsaacLabEureka/
+isaac_env/LEAP_Hand_Isaac_Lab/
+
+# Logs, run outputs, large data
+isaac_env/logs/
+isaac_env/*.log
+isaac_env/pi_adr/logs/
+isaac_env/pi_adr/runs/
+isaac_env/pi_adr/outputs/
+isaac_env/pi_adr/data/
+*.log
+
+# Model checkpoints / large binaries
+*.pt
+*.pth
+*.ckpt
+*.npz
+*.zip
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+
+# Editor / OS
+.vscode/
+.DS_Store

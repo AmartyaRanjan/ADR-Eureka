@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pi_adr"
+version = "0.1.0"
+description = "Physics-informed adaptive domain randomisation on a 2-DOF Isaac Lab reacher"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+where = ["source"]
+
+[tool.setuptools.package-data]
+"pi_adr" = ["assets/*.urdf", "tasks/*/agents/*.yaml"]

@@ -1,0 +1,42 @@
+{
+  "friction": {
+    "range": [
+      0.0,
+      0.8125000000000001
+    ],
+    "epistemic_var_norm": 0.00039469514740630984,
+    "total_var_norm": 0.026648256927728653,
+    "abs_err_norm_diagnostic": 0.38099405169487,
+    "usable_frac": 0.8155089020729065
+  },
+  "damping_scale": {
+    "range": [
+      0.5,
+      20.82395270177878
+    ],
+    "epistemic_var_norm": 0.00320438458584249,
+    "total_var_norm": 0.02818521484732628,
+    "abs_err_norm_diagnostic": 0.682906985282898,
+    "usable_frac": 0.8933039903640747
+  },
+  "effectiveness": {
+    "range": [
+      0.42315124213293165,
+      1.0
+    ],
+    "epistemic_var_norm": 0.0005496703088283539,
+    "total_var_norm": 0.007889863103628159,
+    "abs_err_norm_diagnostic": 0.08070927858352661,
+    "usable_frac": 0.8497413396835327
+  },
+  "mass_scale": {
+    "range": [
+      1.0,
+      1.74375
+    ],
+    "epistemic_var_norm": 9.715722990222275e-05,
+    "total_var_norm": 0.0004287617339286953,
+    "abs_err_norm_diagnostic": 0.07529176771640778,
+    "usable_frac": 0.8332783579826355
+  }
+}

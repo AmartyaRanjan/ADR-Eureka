@@ -1,0 +1,52 @@
+{
+  "extra": {
+    "checkpoint": "logs/rl_games/two_dof_reach/2026-10-11_09-44-32/nn/last_two_dof_reach_ep_800_rew_1305.1459.pth",
+    "domain_rand": {
+      "actuator_effectiveness_range": [
+        1.0,
+        1.0
+      ],
+      "enabled": false,
+      "joint_damping_scale_range": [
+        1.0,
+        1.0
+      ],
+      "joint_friction_range": [
+        0.0,
+        0.0
+      ],
+      "link_mass_scale_range": [
+        1.0,
+        1.0
+      ]
+    },
+    "eval_seed": 1234,
+    "eval_wall_clock_s": 7.13,
+    "note": "rung C: human reward + static DR, seed=1, variant=nominal",
+    "num_envs": 4096,
+    "reward_variant": "vanilla",
+    "task": "PIADR-TwoDofReach-Vanilla-v0",
+    "timestamp": "2026-10-11T09:56:43"
+  },
+  "max_joint_velocity_rad_s": 5.148664951324463,
+  "mean_abs_action": 0.6658775806427002,
+  "mean_control_effort": 1.098828673362732,
+  "mean_joint_velocity_rad_s": 2.8553287982940674,
+  "mean_overshoot_m": 0.14263832569122314,
+  "mean_settling_time_s": 1.5598552227020264,
+  "mean_terminal_error_m": 0.030086640268564224,
+  "median_terminal_error_m": 0.028777211904525757,
+  "metrics_version": "1.0.0",
+  "num_episodes": 4096,
+  "p90_terminal_error_m": 0.044184595346450806,
+  "run_name": "C_seed1_human_static_dr_nominal",
+  "success_rate": {
+    "0.001": 0.0,
+    "0.002": 0.001708984375,
+    "0.005": 0.020263671875,
+    "0.01": 0.06884765625,
+    "0.02": 0.2265625,
+    "0.05": 0.964599609375
+  },
+  "worst_decile_error_m": 0.06189601123332977
+}

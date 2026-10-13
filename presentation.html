@@ -1,0 +1,474 @@
+<title>Physics-Informed Adaptive Reward Generation — Presentation</title>
+<style>
+  :root{
+    --paper:#F5F8F7; --card:#FFFFFF; --ink:#17282F; --muted:#54676E;
+    --accent:#C05A1D; --accent-soft:#F3E2D4; --teal:#186660; --teal-soft:#DCEAE7;
+    --line:#D3DDDA; --code:#EDF2F0;
+    --sans:"Avenir Next","Segoe UI Variable Text","Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#0F1A1E; --card:#152329; --ink:#E7EEEC; --muted:#92A6A2;
+      --accent:#E07A3C; --accent-soft:#3A2417; --teal:#41A093; --teal-soft:#12332F;
+      --line:#24363C; --code:#1B2C32;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0F1A1E; --card:#152329; --ink:#E7EEEC; --muted:#92A6A2;
+    --accent:#E07A3C; --accent-soft:#3A2417; --teal:#41A093; --teal-soft:#12332F;
+    --line:#24363C; --code:#1B2C32;
+  }
+  :root[data-theme="light"]{
+    --paper:#F5F8F7; --card:#FFFFFF; --ink:#17282F; --muted:#54676E;
+    --accent:#C05A1D; --accent-soft:#F3E2D4; --teal:#186660; --teal-soft:#DCEAE7;
+    --line:#D3DDDA; --code:#EDF2F0;
+  }
+
+  html,body{height:100%;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--sans); font-size:clamp(14px,1.35vw,18px); line-height:1.5;
+    overflow:hidden;
+  }
+
+  .deck{position:relative; height:100svh;}
+  .slide{
+    position:absolute; inset:0; display:none; overflow-y:auto;
+    padding:clamp(1.5rem,4vw,4rem) clamp(1.5rem,6vw,6rem);
+  }
+  .slide.active{display:block;}
+  .slide-inner{max-width:1100px; margin:0 auto;}
+
+  .eyebrow{
+    font-family:var(--mono); font-size:.72em; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 .6rem;
+  }
+  h1{font-size:clamp(1.9rem,4.4vw,3.2rem); line-height:1.12; margin:.2rem 0 1rem; text-wrap:balance; font-weight:700;}
+  h2{font-size:clamp(1.5rem,3vw,2.3rem); line-height:1.15; margin:.1rem 0 1.2rem; text-wrap:balance; font-weight:700;}
+  h3{font-size:1.05em; margin:0 0 .4rem; font-weight:600;}
+  ul{margin:.2rem 0; padding-left:1.2em;}
+  li{margin:.42em 0;}
+  li::marker{color:var(--accent);}
+  li li::marker{color:var(--muted);}
+  .muted{color:var(--muted);}
+  strong{font-weight:650;}
+  .tag{
+    display:inline-block; font-family:var(--mono); font-size:.7em; letter-spacing:.06em;
+    background:var(--teal-soft); color:var(--teal); border-radius:3px; padding:.15em .5em; margin-right:.4em;
+  }
+  .tag.warm{background:var(--accent-soft); color:var(--accent);}
+
+  .cols{display:grid; grid-template-columns:1fr 1fr; gap:1.4rem 2.4rem;}
+  @media (max-width:760px){.cols{grid-template-columns:1fr;}}
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:8px;
+    padding:1rem 1.2rem;
+  }
+  .cardgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem;}
+
+  table{border-collapse:collapse; width:100%; font-size:.88em;}
+  th,td{text-align:left; padding:.5em .8em; border-bottom:1px solid var(--line); vertical-align:top;}
+  th{font-family:var(--mono); font-size:.78em; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:600;}
+  .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:8px; background:var(--card);}
+  .tablewrap table{margin:0;}
+  td b{color:var(--accent); font-weight:650;}
+  tbody tr:last-child td{border-bottom:none;}
+  .num{font-variant-numeric:tabular-nums;}
+
+  /* title slide */
+  .title-slide .slide-inner{display:flex; flex-direction:column; justify-content:center; min-height:calc(100svh - 8rem);}
+  .title-rule{width:64px; height:4px; background:var(--accent); border-radius:2px; margin:1.4rem 0;}
+  .authors{font-size:1.05em; margin:.3rem 0 0;}
+  .kicker-row{display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1.6rem;}
+  .kicker{
+    font-family:var(--mono); font-size:.72em; letter-spacing:.08em; color:var(--muted);
+    border:1px solid var(--line); background:var(--card); border-radius:999px; padding:.3em .9em;
+  }
+
+  /* diagram */
+  .diagramwrap{overflow-x:auto; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:1rem;}
+  svg{display:block; min-width:820px; width:100%; height:auto;}
+  .box{fill:var(--paper); stroke:var(--line); stroke-width:1.5; rx:8;}
+  .box.hot{stroke:var(--accent); stroke-width:2;}
+  .box.cool{stroke:var(--teal); stroke-width:2;}
+  .bt{font-family:var(--sans); font-size:14.5px; font-weight:650; fill:var(--ink);}
+  .bs{font-family:var(--sans); font-size:12.5px; fill:var(--muted);}
+  .al{font-family:var(--mono); font-size:11px; fill:var(--muted); letter-spacing:.03em;}
+  .al.hot{fill:var(--accent);} .al.cool{fill:var(--teal);}
+  .flow{stroke:var(--muted); stroke-width:1.6; fill:none;}
+  .flow.hot{stroke:var(--accent); stroke-width:2;}
+  .flow.cool{stroke:var(--teal); stroke-width:2;}
+  .legend{font-family:var(--mono); font-size:11.5px; fill:var(--muted);}
+
+  /* nav */
+  .nav{
+    position:fixed; bottom:0; left:0; right:0; display:flex; align-items:center; gap:1rem;
+    padding:.55rem 1.2rem; background:var(--card); border-top:1px solid var(--line); z-index:5;
+  }
+  .nav button{
+    font-family:var(--mono); font-size:.8rem; background:none; border:1px solid var(--line);
+    color:var(--ink); border-radius:6px; padding:.35em .9em; cursor:pointer;
+  }
+  .nav button:hover{border-color:var(--accent); color:var(--accent);}
+  .nav button:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .counter{font-family:var(--mono); font-size:.8rem; color:var(--muted); font-variant-numeric:tabular-nums;}
+  .progress{flex:1; height:3px; background:var(--line); border-radius:2px; overflow:hidden;}
+  .progress i{display:block; height:100%; background:var(--accent); width:0; transition:width .25s;}
+  @media (prefers-reduced-motion:reduce){.progress i{transition:none;}}
+  .hint{font-family:var(--mono); font-size:.72rem; color:var(--muted);}
+  @media (max-width:700px){.hint{display:none;}}
+  .slide{padding-bottom:5.5rem;}
+
+  /* references */
+  ol.refs{padding-left:2.4em; font-size:.85em;}
+  ol.refs li{margin:.55em 0;}
+  ol.refs li::marker{color:var(--muted); font-family:var(--mono);}
+
+  @media print{
+    body{overflow:visible; background:#fff;}
+    .deck{height:auto;}
+    .slide{display:block; position:static; page-break-after:always; height:auto; overflow:visible;}
+    .nav{display:none;}
+  }
+</style>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title-slide active">
+    <div class="slide-inner">
+      <p class="eyebrow">Research Proposal · Reinforcement Learning × Robotics</p>
+      <h1>Physics-Informed Adaptive Reward Generation for Sim-to-Real Dexterous Hand Control</h1>
+      <div class="title-rule"></div>
+      <p class="authors">Author Name<span class="muted"> · Department, Institution</span></p>
+      <p class="muted">Guide / Supervisor Name · Month 2026</p>
+      <div class="kicker-row">
+        <span class="kicker">LLM reward generation</span>
+        <span class="kicker">Adaptive domain randomization</span>
+        <span class="kicker">PINN failure diagnosis</span>
+        <span class="kicker">Shadow Hand + LEAP Hand</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · INTRODUCTION -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="eyebrow">02 · Introduction</p>
+      <h2>Why automate reward design for dexterous hands?</h2>
+      <ul>
+        <li><strong>Reward engineering is the bottleneck of RL</strong> — hand-tuned rewards need expert effort, and poor rewards silently cap policy quality.</li>
+        <li><strong>Eureka</strong> [1]: a coding LLM writes reward functions from raw environment source code, refined by evolutionary search + reward reflection.</li>
+        <li><strong>DrEureka</strong> [2]: extends this by LLM-generating <em>domain randomization (DR)</em> configs → zero-shot sim-to-real transfer.</li>
+        <li><strong>Dexterous in-hand manipulation</strong> is the hardest testbed: high DOF (16–20 actuated joints), continuous multi-point contact, severe sim-to-real gap.</li>
+        <li>Training uses <strong>PPO</strong> [3] in massively parallel GPU simulation (Isaac Gym [10]) — thousands of environments per GPU.</li>
+        <li>Our aim: make the reward–DR loop <strong>self-diagnosing and adaptive</strong>, so it converges to rewards that transfer, not just rewards that score.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3 · PROBLEM STATEMENT -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="eyebrow">03 · Problem Statement</p>
+      <h2>The reward loop is blind to physics</h2>
+      <ul>
+        <li><span class="tag warm">P1</span><strong>Static DR</strong> — DrEureka fixes DR ranges once, before training; policy robustness evolves, ranges don't (named a limitation by the authors themselves [2]).</li>
+        <li><span class="tag warm">P2</span><strong>No failure attribution</strong> — reward reflection reports <em>that</em> a reward failed, never <em>why</em>: reward-logic bug vs. physics/dynamics mismatch look identical to the LLM.</li>
+        <li><span class="tag warm">P3</span><strong>Risk of reward shunting</strong> — an unconstrained LLM "fixes" physics errors inside reward code, masking the true cause and hurting transfer.</li>
+        <li><span class="tag warm">P4</span><strong>Lossy feedback channel</strong> — hand-crafted per-component scalar statistics discard where and how trajectories fail.</li>
+      </ul>
+      <div class="card" style="margin-top:1.2rem;">
+        <h3>Formal statement</h3>
+        <p style="margin:.2rem 0;">Given task spec ℓ and environment M, jointly search reward <em>R</em> and DR distribution <em>φ</em> such that a PPO policy trained on (M<sub>φ</sub>, R) maximizes true task fitness <em>F</em> on the <strong>real / held-out system</strong> — with failure feedback that separates physical mismatch from reward-logic error.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · LITERATURE SURVEY -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="eyebrow">04 · Literature Survey</p>
+      <h2>Where prior work stands</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Work</th><th>Approach</th><th>Limitation w.r.t. this project</th></tr></thead>
+          <tbody>
+            <tr><td><b>Eureka</b> [1]</td><td>LLM reward code + evolutionary search + reward reflection; 29 tasks incl. Shadow Hand pen spinning</td><td>Sim-only; no DR; reflection is hand-crafted statistics</td></tr>
+            <tr><td><b>DrEureka</b> [2]</td><td>LLM-generated DR via reward-aware physics prior; zero-shot real transfer (Go1, LEAP Hand)</td><td>DR static after generation; no physics diagnosis</td></tr>
+            <tr><td><b>ADR</b> [5]</td><td>Auto-widening DR ranges from policy performance (Rubik's cube)</td><td>Hand-designed reward; not coupled to any reward loop</td></tr>
+            <tr><td><b>REvolve</b> [6]</td><td>LLM rewards with true evolutionary operators + human-feedback fitness</td><td>Needs humans in loop; no DR, no physics signal</td></tr>
+            <tr><td><b>PIN-WM</b> [7]</td><td>Physics-informed world model; DR as "digital cousins" around identified params</td><td>Non-prehensile pushing; no LLM rewards</td></tr>
+            <tr><td><b>PI-DDPG</b> [8]</td><td>PINN-in-the-loop RL control of a 4-DOF manipulator</td><td>Fixed hand-designed reward; low DOF; no sim-to-real DR</td></tr>
+            <tr><td><b>Surveys</b> [11], [12]</td><td>Taxonomies of sim-to-real: DR, adaptation, system ID, LLM-based reward design</td><td>Confirm no unified adaptive-DR + physics-diagnosis loop exists</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · RESEARCH GAPS -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="eyebrow">05 · Research Gaps</p>
+      <h2>Four gaps at the intersection</h2>
+      <div class="cardgrid">
+        <div class="card"><h3><span class="tag">G1</span>DR never adapts inside the LLM loop</h3>
+          <ul><li>ADR [5] adapts but has no LLM rewards; DrEureka [2] has LLM rewards but static DR.</li><li>No work couples both to <em>one</em> feedback channel.</li></ul></div>
+        <div class="card"><h3><span class="tag">G2</span>No physics-failure attribution</h3>
+          <ul><li>PINNs model manipulator dynamics [4], [8] — never used to tell an LLM <em>why</em> a reward fails.</li></ul></div>
+        <div class="card"><h3><span class="tag">G3</span>Attribution never validated</h3>
+          <ul><li>No prior protocol tests a diagnosis signal against <em>injected ground-truth</em> faults (known reward bugs vs. known dynamics shifts).</li></ul></div>
+        <div class="card"><h3><span class="tag">G4</span>Feedback channel is hand-crafted; single morphology</h3>
+          <ul><li>Reflection statistics are fixed heuristics, not learned.</li><li>Reward-generation systems rarely validated across two hand morphologies.</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · CONTRIBUTION -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="eyebrow">06 · Contributions</p>
+      <h2>What this work adds</h2>
+      <ul>
+        <li><span class="tag warm">C1</span><strong>Adaptive DR in the reward loop</strong> — ranges widen/narrow every N reward iterations from policy performance, driven by the same feedback channel that edits rewards. <em>(closes G1)</em></li>
+        <li><span class="tag warm">C2</span><strong>PINN failure diagnosis with routing</strong> — physics-residual signal classifies failures; reward-logic → reward edit only, physics mismatch → DR update only. Reward code is barred from absorbing physics errors. <em>(closes G2)</em></li>
+        <li><span class="tag warm">C3</span><strong>Injection-validated attribution</strong> — known reward bugs vs. known dynamics perturbations give a ground-truth AUC for the diagnosis signal, plus shuffled-signal placebo arms. <em>(closes G3)</em></li>
+        <li><span class="tag warm">C4</span><strong>Learned failure-mode summarizer</strong> — MLP trained to predict episode outcome + failure phase replaces hand-crafted reflection statistics. <em>(closes G4, optional rung)</em></li>
+        <li><span class="tag">Eval</span><strong>Cross-morphology ablation</strong> — full 4-rung ladder on Shadow Hand (20 DOF, sim suite) <em>and</em> LEAP Hand (16 DOF, sim + real hardware); one component changes per rung.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 7 · ARCHITECTURE -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="eyebrow">07 · Architecture (Abstract)</p>
+      <h2>Two feedback loops, one diagnosis router</h2>
+      <div class="diagramwrap">
+        <svg viewBox="0 0 1040 590" role="img" aria-label="System architecture: LLM generates rewards, parallel PPO trains them, PINN and summarizer feed a diagnosis router that routes fixes to either reward edits or DR updates">
+          <defs>
+            <marker id="m" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M1,1 L8,4.5 L1,8" fill="none" stroke="var(--muted)" stroke-width="1.6"/></marker>
+            <marker id="mh" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M1,1 L8,4.5 L1,8" fill="none" stroke="var(--accent)" stroke-width="2"/></marker>
+            <marker id="mc" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M1,1 L8,4.5 L1,8" fill="none" stroke="var(--teal)" stroke-width="2"/></marker>
+          </defs>
+
+          <!-- inputs -->
+          <rect class="box" x="30" y="60" width="200" height="86" rx="8"/>
+          <text class="bt" x="46" y="92">Task spec + safety</text>
+          <text class="bs" x="46" y="112">environment source code</text>
+          <text class="bs" x="46" y="130">(Eureka-style context)</text>
+
+          <!-- LLM -->
+          <rect class="box hot" x="300" y="52" width="230" height="102" rx="8"/>
+          <text class="bt" x="318" y="84">Coding LLM</text>
+          <text class="bs" x="318" y="104">reward generation</text>
+          <text class="bs" x="318" y="122">evolutionary search,</text>
+          <text class="bs" x="318" y="140">K candidates / iteration</text>
+
+          <!-- Sim -->
+          <rect class="box" x="610" y="40" width="250" height="126" rx="8"/>
+          <text class="bt" x="628" y="72">Parallel PPO training</text>
+          <text class="bs" x="628" y="92">GPU simulation (Isaac Gym)</text>
+          <text class="bs" x="628" y="112">Shadow Hand · LEAP Hand</text>
+          <rect class="box cool" x="628" y="124" width="214" height="30" rx="6"/>
+          <text class="bs" x="640" y="144">DR sampler φ (ranges)</text>
+
+          <!-- PINN -->
+          <rect class="box" x="610" y="230" width="250" height="96" rx="8"/>
+          <text class="bt" x="628" y="262">Physics-informed net</text>
+          <text class="bs" x="628" y="282">physics-residual loss (EOM +</text>
+          <text class="bs" x="628" y="300">soft contact) → consistency signal</text>
+
+          <!-- Summarizer -->
+          <rect class="box" x="610" y="380" width="250" height="96" rx="8"/>
+          <text class="bt" x="628" y="412">State summarizer + fitness F</text>
+          <text class="bs" x="628" y="432">MLP → failure descriptors</text>
+          <text class="bs" x="628" y="450">(outcome, phase, per-finger)</text>
+
+          <!-- Router -->
+          <rect class="box hot" x="300" y="300" width="230" height="110" rx="8"/>
+          <text class="bt" x="318" y="332">Diagnosis router (LLM)</text>
+          <text class="bs" x="318" y="352">classify failure:</text>
+          <text class="bs" x="318" y="370">reward-logic error, or</text>
+          <text class="bs" x="318" y="388">physics / dynamics mismatch</text>
+
+          <!-- ADR -->
+          <rect class="box cool" x="30" y="300" width="200" height="110" rx="8"/>
+          <text class="bt" x="46" y="332">Adaptive DR</text>
+          <text class="bt" x="46" y="352">controller</text>
+          <text class="bs" x="46" y="374">widen / narrow ranges</text>
+          <text class="bs" x="46" y="392">every N iterations</text>
+
+          <!-- forward flows -->
+          <path class="flow" d="M230,103 L293,103" marker-end="url(#m)"/>
+          <path class="flow" d="M530,103 L603,103" marker-end="url(#m)"/>
+          <text class="al" x="536" y="93">K rewards</text>
+          <path class="flow" d="M735,166 L735,223" marker-end="url(#m)"/>
+          <text class="al" x="745" y="200">state + DR params</text>
+          <path class="flow" d="M880,166 C910,220 910,320 882,374" marker-end="url(#m)"/>
+          <text class="al" x="900" y="278">telemetry</text>
+          <path class="flow" d="M610,290 L560,290 C540,290 540,320 530,330" marker-end="url(#m)"/>
+          <path class="flow" d="M610,428 L560,428 C540,428 540,390 530,380" marker-end="url(#m)"/>
+          <text class="al" x="538" y="262">consistency signal</text>
+          <text class="al" x="538" y="452">failure descriptors + F</text>
+
+          <!-- feedback: reward edit -->
+          <path class="flow hot" d="M380,300 L380,206 C380,180 390,164 400,160" marker-end="url(#mh)"/>
+          <text class="al hot" x="392" y="238">reward-logic → reward edit</text>
+
+          <!-- feedback: DR -->
+          <path class="flow cool" d="M300,355 L237,355" marker-end="url(#mc)"/>
+          <text class="al cool" x="240" y="345">physics → DR update</text>
+          <path class="flow cool" d="M130,300 C130,180 300,139 621,139" marker-end="url(#mc)"/>
+          <text class="al cool" x="150" y="192">new ranges φ′</text>
+
+          <!-- legend -->
+          <rect class="box" x="30" y="500" width="560" height="60" rx="8"/>
+          <line x1="52" y1="530" x2="92" y2="530" class="flow hot"/><text class="legend" x="100" y="534">reward-edit loop (Eureka, inherited)</text>
+          <line x1="330" y1="530" x2="370" y2="530" class="flow cool"/><text class="legend" x="378" y="534">adaptive-DR loop (new)</text>
+        </svg>
+      </div>
+      <p class="muted" style="font-size:.85em; margin-top:.6rem;">Router rule: each diagnosis can trigger only its own loop — reward code never compensates for physics mismatch.</p>
+    </div>
+  </section>
+
+  <!-- 8 · MODULES -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="eyebrow">08 · Module Split</p>
+      <h2>Five modules, mapped to contributions</h2>
+      <div class="cardgrid">
+        <div class="card"><h3><span class="tag">M1</span>Reward generation loop <span class="muted">(inherited)</span></h3>
+          <ul><li>Eureka pipeline unmodified: LLM → K candidates → parallel PPO → reflection.</li><li>Kept as-is for ablation validity (rung 1).</li></ul></div>
+        <div class="card"><h3><span class="tag">M2</span>Adaptive DR controller <span class="muted">(C1)</span></h3>
+          <ul><li>Performance-thresholded widen/narrow of DR ranges every N iterations.</li><li>Initialized from DrEureka's reward-aware physics prior.</li></ul></div>
+        <div class="card"><h3><span class="tag">M3</span>PINN + diagnosis router <span class="muted">(C2, C3)</span></h3>
+          <ul><li>MLP; supervised loss + physics residual (Lagrangian EOM, relaxed contact).</li><li>Contact-gated diagnostic signal; two-stage routing prompt; pre-trained frozen first.</li></ul></div>
+        <div class="card"><h3><span class="tag">M4</span>Failure-mode summarizer <span class="muted">(C4, optional)</span></h3>
+          <ul><li>Trained on free labels: episode success + hindsight failure phase.</li><li>Descriptors join the reflection channel; cuttable without breaking M1–M3.</li></ul></div>
+        <div class="card"><h3><span class="tag">M5</span>Evaluation &amp; transfer harness</h3>
+          <ul><li>4-rung ablation ladder × 2 morphologies.</li><li>Injection calibration, placebo arms, routing audit.</li><li>Real LEAP Hand deployment; held-out "pseudo-real" sim for Shadow Hand.</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · DATASET -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="eyebrow">09 · Dataset Description</p>
+      <h2>Simulation-generated data, four corpora</h2>
+      <ul>
+        <li><strong>No fixed offline dataset</strong> — all training data is generated online by GPU-parallel simulation (~4,096 environments per run, native control rate ≈ 60 Hz).</li>
+        <li><strong>Environments</strong>
+          <ul>
+            <li>Shadow Hand [1], [10]: 24 joints / 20 actuated; Eureka's 29-task suite (9 Isaac + 20 bidexterous tasks).</li>
+            <li>LEAP Hand [2], [9]: 16 DOF; in-hand cube rotation; observations = 16 joint angles + proprioceptive history only (no object pose).</li>
+          </ul></li>
+        <li><strong>Rollout telemetry</strong> (per step): joint positions/velocities/torques, tracking error, contact events, active DR parameter values — feeds reflection + summarizer.</li>
+        <li><strong>PINN corpus</strong>: privileged sim transitions — hand joint state + object 6-DoF pose/twist + DR params — sampled across DR ranges; physics residual is self-supervised (no manual labels).</li>
+        <li><strong>Summarizer corpus</strong>: episodes auto-labeled success/failure by fitness F, plus hindsight failure-phase windows.</li>
+        <li><strong>Injection corpus</strong> (ground truth for validation): labeled runs with seeded reward bugs (sign flip, wrong scale, missing term) vs. seeded dynamics shifts (mass ×1.5, friction ×0.3, added damping).</li>
+        <li><strong>Real-world eval set</strong>: physical LEAP Hand rollouts — rotations per 20 s episode, zero-shot.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 10 · METRICS -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="eyebrow">10 · Performance Metrics</p>
+      <h2>Every claim gets its own number</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Claim under test</th><th>Metric</th><th>Protocol</th></tr></thead>
+          <tbody>
+            <tr><td>Reward quality</td><td class="num">Task fitness F: consecutive successes (reorientation); rotations / 20 s (LEAP); human-normalized improvement</td><td>Eureka scoring, unchanged [1]</td></tr>
+            <tr><td>Sim-to-real transfer</td><td class="num">Zero-shot success rate + rotations on physical LEAP Hand</td><td>DrEureka deployment protocol [2]</td></tr>
+            <tr><td>Sim-to-OOD-sim transfer</td><td class="num">Fitness on held-out perturbed sim config (outside all DR ranges)</td><td>Shadow Hand; config hidden from whole loop</td></tr>
+            <tr><td>Diagnosis validity</td><td class="num">AUC: reward-bug vs. dynamics-shift discrimination</td><td>Injection calibration study</td></tr>
+            <tr><td>Routing quality</td><td class="num">Diagnosis→edit confusion matrix accuracy</td><td>Routing audit vs. injected ground truth</td></tr>
+            <tr><td>Signal is load-bearing</td><td class="num">Δ fitness: real vs. shuffled vs. no signal</td><td>Placebo arms (2×2 at rung 4)</td></tr>
+            <tr><td>Efficiency</td><td class="num">Reward iterations-to-threshold; wall-clock per rung</td><td>Identical budgets across rungs</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · CONCLUSION -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="eyebrow">11 · Conclusion</p>
+      <h2>Takeaways</h2>
+      <ul>
+        <li>Extends Eureka/DrEureka precisely where its authors flagged limits: <strong>static DR → adaptive</strong>, blind reflection → <strong>physics-attributed diagnosis</strong>.</li>
+        <li>The <strong>routing rule</strong> is the key safeguard — reward edits fix reward logic, DR updates fix physics, so the PINN's contribution stays measurable.</li>
+        <li>Validation is built in, not bolted on: <strong>injection ground truth, placebo arms, one-component-per-rung ablation</strong>, replicated across two hand morphologies.</li>
+        <li>Deliverables: adaptive reward-generation pipeline, validated diagnosis protocol (reusable beyond this system), zero-shot real LEAP Hand transfer results.</li>
+        <li><strong>Future work</strong>: vision-based observations, online PINN retraining, extension to bimanual and deformable-object manipulation.</li>
+      </ul>
+      <div class="card" style="margin-top:1.2rem;">
+        <h3>Immediate next milestones</h3>
+        <ul style="margin:.2rem 0;">
+          <li>Rung-1 reproduction on both platforms → injection calibration study (go/no-go for the PINN pillar) → LEAP Hand hardware build in parallel.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 · REFERENCES -->
+  <section class="slide">
+    <div class="slide-inner">
+      <p class="eyebrow">12 · References (IEEE)</p>
+      <h2>References</h2>
+      <ol class="refs">
+        <li>Y. J. Ma, W. Liang, G. Wang, D.-A. Huang, O. Bastani, D. Jayaraman, Y. Zhu, L. Fan, and A. Anandkumar, "Eureka: Human-level reward design via coding large language models," in <em>Proc. Int. Conf. Learning Representations (ICLR)</em>, Vienna, Austria, 2024.</li>
+        <li>Y. J. Ma, W. Liang, H.-J. Wang, S. Wang, Y. Zhu, L. Fan, O. Bastani, and D. Jayaraman, "DrEureka: Language model guided sim-to-real transfer," in <em>Proc. Robotics: Science and Systems (RSS)</em>, Delft, Netherlands, 2024.</li>
+        <li>J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov, "Proximal policy optimization algorithms," <em>arXiv preprint</em> arXiv:1707.06347, 2017.</li>
+        <li>M. Raissi, P. Perdikaris, and G. E. Karniadakis, "Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations," <em>J. Comput. Phys.</em>, vol. 378, pp. 686–707, Feb. 2019.</li>
+        <li>I. Akkaya <em>et al.</em>, "Solving Rubik's cube with a robot hand," <em>arXiv preprint</em> arXiv:1910.07113, 2019.</li>
+        <li>R. Hazra, A. Sygkounas, A. Persson, A. Loutfi, and P. Zuidberg Dos Martires, "REvolve: Reward evolution with large language models using human feedback," <em>arXiv preprint</em> arXiv:2406.01309, 2025.</li>
+        <li>W. Li, H. Zhao, Z. Yu, Y. Du, Q. Zou, R. Hu, and K. Xu, "PIN-WM: Learning physics-informed world models for non-prehensile manipulation," <em>arXiv preprint</em> arXiv:2504.16693, 2025.</li>
+        <li>R. Fareh, N. Siddique, S. Choutri, and D. V. Dylov, "Physics-informed reward shaped reinforcement learning control of a robot manipulator," <em>Ain Shams Eng. J.</em>, vol. 16, art. no. 103595, 2025.</li>
+        <li>K. Shaw, A. Agarwal, and D. Pathak, "LEAP Hand: Low-cost, efficient, and anthropomorphic hand for robot learning," in <em>Proc. Robotics: Science and Systems (RSS)</em>, Daegu, South Korea, 2023.</li>
+        <li>V. Makoviychuk <em>et al.</em>, "Isaac Gym: High performance GPU-based physics simulation for robot learning," in <em>Proc. NeurIPS Datasets and Benchmarks Track</em>, 2021.</li>
+        <li>L. Da, J. Turnau, T. P. Kutralingam, A. Velasquez, P. Shakarian, and H. Wei, "A survey of sim-to-real methods in RL: Progress, prospects and challenges with foundation models," <em>arXiv preprint</em> arXiv:2502.13187, 2025.</li>
+        <li>A. Pitkevich and I. Makarov, "A survey on sim-to-real transfer methods for robotic manipulation," in <em>Proc. IEEE 22nd Int. Symp. Intelligent Systems and Informatics (SISY)</em>, 2024.</li>
+        <li>J. Deng, Y. Dong, and Z. Liu, "Reward shaping in reinforcement learning for robotic hand manipulation," <em>Neurocomputing</em>, vol. 638, art. no. 130204, 2025.</li>
+      </ol>
+    </div>
+  </section>
+</div>
+
+<div class="nav">
+  <button id="prev" aria-label="Previous slide">◀ Prev</button>
+  <button id="next" aria-label="Next slide">Next ▶</button>
+  <div class="progress"><i id="bar"></i></div>
+  <span class="counter" id="counter">1 / 12</span>
+  <span class="hint">← → keys · Ctrl+P to export PDF</span>
+</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=0;
+  const bar=document.getElementById('bar'), counter=document.getElementById('counter');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    counter.textContent=(i+1)+' / '+slides.length;
+    bar.style.width=((i+1)/slides.length*100)+'%';
+    slides[i].scrollTop=0;
+  }
+  document.getElementById('next').addEventListener('click',()=>show(i+1));
+  document.getElementById('prev').addEventListener('click',()=>show(i-1));
+  addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ')show(i+1);
+    else if(e.key==='ArrowLeft'||e.key==='PageUp')show(i-1);
+    else if(e.key==='Home')show(0);
+    else if(e.key==='End')show(slides.length-1);
+  });
+  show(0);
+</script>

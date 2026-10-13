@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!--
+  2-DOF planar serial arm ("goal-marker reacher").
+
+  Geometry/inertia follow the project's technical report:
+    link lengths  l1 = l2 = 0.5 m
+    link masses   m1 = 1.0 kg, m2 = 0.5 kg
+    joints        2 revolute, both about Z
+    effort limit  +/- 20 Nm
+    velocity lim  +/- 5 rad/s
+    joint damping 0.05
+    joint range   continuous (see note)
+
+  Joint range note: the report specifies q_i in [-pi, pi], but hard limits there
+  create a wrap-around trap — when the goal needs rotation past +/-pi the
+  shortest path is blocked and the arm stalls against the stop. Measured with a
+  scripted IK+PD controller: 31.4% of episodes fail with +/-pi limits and 100%
+  of those failures end against a limit, versus 0% failures and 100% success
+  below 1 mm once limits are widened. An optimal controller is therefore capped
+  near 69%, so the report's 99.49% implies its limits were never binding.
+  Both joints are continuous here; observed angles are wrapped to [-pi, pi].
+
+  Plane convention: the arm lies in the world XY plane and both joints rotate
+  about world Z, so gravity (-Z) acts along the joint axes and produces no
+  joint torque. The planar dynamics therefore reduce to
+  M(q)qdd + C(q,qd)qd + F(qd) = tau, i.e. g(q) == 0, which is what the
+  report's reward/dynamics equations assume.
+
+  Link inertias are thin cylinders of radius 0.02 m about the link COM at L/2:
+    ixx = 0.5 m r^2 ,  iyy = izz = (1/12) m L^2 + (1/4) m r^2
+-->
+<robot name="two_dof_arm">
+
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 -0.02" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.05" length="0.04"/></geometry>
+      <material name="base_grey"><color rgba="0.3 0.3 0.35 1.0"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.02" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.05" length="0.04"/></geometry>
+    </collision>
+  </link>
+
+  <joint name="joint_1" type="continuous">
+    <parent link="base_link"/>
+    <child link="link_1"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="20.0" velocity="5.0"/>
+    <dynamics damping="0.05" friction="0.0"/>
+  </joint>
+
+  <link name="link_1">
+    <inertial>
+      <origin xyz="0.25 0 0" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.0002" ixy="0.0" ixz="0.0" iyy="0.0209333" iyz="0.0" izz="0.0209333"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.25 0 0" rpy="0 1.57079633 0"/>
+      <geometry><cylinder radius="0.02" length="0.5"/></geometry>
+      <material name="link1_blue"><color rgba="0.15 0.45 0.85 1.0"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0.25 0 0" rpy="0 1.57079633 0"/>
+      <geometry><cylinder radius="0.02" length="0.5"/></geometry>
+    </collision>
+  </link>
+
+  <joint name="joint_2" type="continuous">
+    <parent link="link_1"/>
+    <child link="link_2"/>
+    <origin xyz="0.5 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="20.0" velocity="5.0"/>
+    <dynamics damping="0.05" friction="0.0"/>
+  </joint>
+
+  <link name="link_2">
+    <inertial>
+      <origin xyz="0.25 0 0" rpy="0 0 0"/>
+      <mass value="0.5"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0104667" iyz="0.0" izz="0.0104667"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.25 0 0" rpy="0 1.57079633 0"/>
+      <geometry><cylinder radius="0.02" length="0.5"/></geometry>
+      <material name="link2_orange"><color rgba="0.95 0.5 0.1 1.0"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0.25 0 0" rpy="0 1.57079633 0"/>
+      <geometry><cylinder radius="0.02" length="0.5"/></geometry>
+    </collision>
+  </link>
+
+  <!-- End-effector frame at the tip of link 2; massless marker frame only. -->
+  <joint name="ee_fixed" type="fixed">
+    <parent link="link_2"/>
+    <child link="ee_link"/>
+    <origin xyz="0.5 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="ee_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.001"/>
+      <inertia ixx="1e-6" ixy="0.0" ixz="0.0" iyy="1e-6" iyz="0.0" izz="1e-6"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><sphere radius="0.025"/></geometry>
+      <material name="ee_red"><color rgba="0.9 0.1 0.1 1.0"/></material>
+    </visual>
+  </link>
+
+</robot>

@@ -1,0 +1,52 @@
+{
+  "extra": {
+    "checkpoint": "/data/home/amartyaranjan888/projects/I/isaac_env/pi_adr/logs/rl_games/two_dof_reach/2026-10-10_17-31-32/nn/last_two_dof_reach_ep_800_rew__24998.133_.pth",
+    "domain_rand": {
+      "actuator_effectiveness_range": [
+        1.0,
+        1.0
+      ],
+      "enabled": false,
+      "joint_damping_scale_range": [
+        1.0,
+        1.0
+      ],
+      "joint_friction_range": [
+        0.0,
+        0.0
+      ],
+      "link_mass_scale_range": [
+        1.0,
+        1.0
+      ]
+    },
+    "eval_seed": 1234,
+    "eval_wall_clock_s": 7.76,
+    "note": "rung F, nominal physics, 800 total PPO iters, 2048 train envs",
+    "num_envs": 4096,
+    "reward_variant": "eureka",
+    "task": "PIADR-TwoDofReach-Eureka-v0",
+    "timestamp": "2026-10-10T17:38:12"
+  },
+  "max_joint_velocity_rad_s": 5.148585796356201,
+  "mean_abs_action": 0.7809597253799438,
+  "mean_control_effort": 1.376632571220398,
+  "mean_joint_velocity_rad_s": 3.2354183197021484,
+  "mean_overshoot_m": 0.12075868248939514,
+  "mean_settling_time_s": 7.17990779876709,
+  "mean_terminal_error_m": 0.03825683891773224,
+  "median_terminal_error_m": 0.03621896356344223,
+  "metrics_version": "1.0.0",
+  "num_episodes": 4096,
+  "p90_terminal_error_m": 0.061935313045978546,
+  "run_name": "F_nominal",
+  "success_rate": {
+    "0.001": 0.001220703125,
+    "0.002": 0.00341796875,
+    "0.005": 0.0166015625,
+    "0.01": 0.05419921875,
+    "0.02": 0.201416015625,
+    "0.05": 0.728759765625
+  },
+  "worst_decile_error_m": 0.0771397203207016
+}

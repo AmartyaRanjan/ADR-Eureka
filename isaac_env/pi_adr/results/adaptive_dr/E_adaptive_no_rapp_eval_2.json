@@ -1,0 +1,32 @@
+{
+  "ranges": {
+    "friction": [
+      0.0,
+      5.2250000000000005
+    ],
+    "damping_scale": [
+      0.5,
+      4.0
+    ],
+    "effectiveness": [
+      0.40690000000000004,
+      1.0
+    ],
+    "mass_scale": [
+      1.0,
+      5.015000000000001
+    ]
+  },
+  "success_per_dim": {
+    "friction": 0.2109375,
+    "damping_scale": 0.2353515625,
+    "effectiveness": 0.3408203125,
+    "mass_scale": 0.4208984375
+  },
+  "mean_err_per_dim": {
+    "friction": 0.08673645555973053,
+    "damping_scale": 0.09874150156974792,
+    "effectiveness": 0.07288376241922379,
+    "mass_scale": 0.07191267609596252
+  }
+}

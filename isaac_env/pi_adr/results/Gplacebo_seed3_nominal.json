@@ -1,0 +1,52 @@
+{
+  "extra": {
+    "checkpoint": "/data/home/amartyaranjan888/projects/I/isaac_env/pi_adr/logs/rl_games/two_dof_reach/2026-10-13_22-45-20/nn/last_two_dof_reach_ep_800_rew__27061.479_.pth",
+    "domain_rand": {
+      "actuator_effectiveness_range": [
+        1.0,
+        1.0
+      ],
+      "enabled": false,
+      "joint_damping_scale_range": [
+        1.0,
+        1.0
+      ],
+      "joint_friction_range": [
+        0.0,
+        0.0
+      ],
+      "link_mass_scale_range": [
+        1.0,
+        1.0
+      ]
+    },
+    "eval_seed": 1234,
+    "eval_wall_clock_s": 5.05,
+    "note": "rung G (shuffle, observer seq), seed=3, variant=nominal",
+    "num_envs": 4096,
+    "reward_variant": "eureka",
+    "task": "PIADR-TwoDofReach-Eureka-v0",
+    "timestamp": "2026-10-13T22:48:06"
+  },
+  "max_joint_velocity_rad_s": 5.145398139953613,
+  "mean_abs_action": 0.6603333353996277,
+  "mean_control_effort": 1.1039891242980957,
+  "mean_joint_velocity_rad_s": 2.7596383094787598,
+  "mean_overshoot_m": 0.08353494107723236,
+  "mean_settling_time_s": 2.5384767055511475,
+  "mean_terminal_error_m": 0.03582751750946045,
+  "median_terminal_error_m": 0.028318963944911957,
+  "metrics_version": "1.0.0",
+  "num_episodes": 4096,
+  "p90_terminal_error_m": 0.045764222741127014,
+  "run_name": "Gplacebo_seed3_nominal",
+  "success_rate": {
+    "0.001": 0.000244140625,
+    "0.002": 0.001220703125,
+    "0.005": 0.01953125,
+    "0.01": 0.087890625,
+    "0.02": 0.30419921875,
+    "0.05": 0.9375
+  },
+  "worst_decile_error_m": 0.12671823799610138
+}

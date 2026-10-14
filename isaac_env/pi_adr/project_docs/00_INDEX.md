@@ -1,7 +1,7 @@
 # Project documentation index — Physics-Informed Adaptive Domain Randomization
 
 **Written for:** the project owner and any co-author or reviewer who needs to understand exactly what was done, why, what was found, and how much each finding can be trusted.
-**State of record:** 13 October 2026. The 2-DOF track is complete except one queued re-run (see `10_ablation_matrix_A_to_G.md`). The LEAP Hand track is **still running** (see `11_leap_hand_track_b.md`, marked IN PROGRESS).
+**State of record:** 13 October 2026. The 2-DOF track is complete except one re-run in progress (G/placebo seeds 3–6, see `10_ablation_matrix_A_to_G.md`). The LEAP Hand track is **complete** at 3 seeds (see `11_leap_hand_track_b.md`).
 **Companion records (older, chronological):** `../EXPERIMENT_LOG.md` (append-only, every run), `../PROJECT_STATUS_AND_ROADMAP.md`, `../RESULTS_2026-09-16.md`, `../CODE_AND_MATH_COMPILATION.md`. These MDs consolidate and explain them; where they disagree, **`EXPERIMENT_LOG.md` entries dated 11–13 Oct 2026 and these documents are authoritative**, because the older text predates several corrections.
 
 ---
@@ -24,10 +24,11 @@ Stage 1 (a prior report) claimed that a reward discovered by an LLM (Eureka) rea
 | 08 | `08_pinn_physics_observer.md` | Observer design, four excitation-protocol iterations, identifiability findings |
 | 09 | `09_adaptive_dr_development_F_and_E.md` | Controller design, F1→F4, rung E, multi-seed corrections |
 | 10 | `10_ablation_matrix_A_to_G.md` | The final 5-seed matrix, rung G, placebo, contaminated retest and its repair |
-| 11 | `11_leap_hand_track_b.md` | LEAP: native ADR discovery, the unattended queue, failures, current numbers (**in progress**) |
+| 11 | `11_leap_hand_track_b.md` | LEAP: native ADR discovery, the unattended queue, failures, final 3-seed numbers |
 | 12 | `12_validity_and_claims_ledger.md` | Claim-by-claim: what was claimed, how it was tested, whether it survived |
 | 13 | `13_open_questions_and_further_plan.md` | What is unproven, the research-level plan, publication assessment |
 | 14 | `14_reproduction_and_file_map.md` | Commands, file map, run naming, compute notes |
+| 15 | `15_plan_for_a_positive_result.md` | Proposed experiments (E1–E5) to earn a genuine "success" for the paper: reasoning, pre-declared criteria, costs, schedule, outcomes |
 
 ## 3. Headline findings and how far to trust them
 
@@ -44,7 +45,7 @@ Confidence legend: **High** = replicated across ≥5 seeds and/or checked agains
 | 7 | PINN observer: accuracy good inside its training range, unreliable outside; uncertainty weakly tracks error; mass/effectiveness degeneracy partly broken by sequential single-joint steady-state excitation | interp acc RMSE 1.95 rad/s²; extrap 7.73; rank corr +0.27 / −0.16 | Medium |
 | 8 | PINN-informed adaptive DR (G) is not demonstrably better than a shuffled-information placebo | clean 6 seeds, DRshift worst-decile p=0.147; nominal/DRtrain p ≥ 0.74 | Medium (rerun of 4 seeds queued) |
 | 9 | LEAP Hand already ships native adaptive DR; the stock "baseline" was not a no-DR baseline | num_adr_increases 0 → 8 of 25 over 500 iters | High (read from TensorBoard) |
-| 10 | LEAP matrix (no ADR / native ADR / warm-started ADR) | partial: seed-42 only so far | **In progress** |
+| 10 | LEAP matrix (no ADR / native ADR / warm-started ADR), 3 seeds | nominal 8.42 / 8.68 / 8.00 rotations per 20 s (p ≥ 0.70); full DR 0.56 / 0.75 / 1.53 (p ≥ 0.20): no condition effect, seed variance dominates, all policies collapse at full DR | High that *no large effect exists at this budget*; budget too short to test ADR |
 
 ## 4. Claims we retracted (details in `12_validity_and_claims_ledger.md`)
 

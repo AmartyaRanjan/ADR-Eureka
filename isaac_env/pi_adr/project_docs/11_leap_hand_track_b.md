@@ -1,6 +1,6 @@
 # 11 — LEAP Hand (Track B)
 
-> **STATUS: IN PROGRESS.** As of 13 Oct 2026 15:50 UTC: seed 42 is complete for L0 and L1, L2 seed-42 training is done and its evaluation is starting; seeds 123 and 7 for all three conditions are still queued (≈ 55–65 min of training each when the GPU is available). This document will be finalised when the queue ends. Live table: `python scripts/analyze_leap.py` → `results/MATRIX_LEAP.md`; live status: `logs/leap_queue_status.log`.
+> **STATUS: COMPLETE (13 Oct 2026, 22:08 UTC).** All 9 runs (L0/L1/L2 × seeds 42, 123, 7) trained to 500 iterations and were evaluated at ADR = 0 and ADR = 25. Live table: `python scripts/analyze_leap.py` → `results/MATRIX_LEAP.md`; statistics: `results/LEAP_stats_n3.txt`; status log: `logs/leap_queue_status.log`.
 
 **Purpose.** Run the roadmap's study on a real manipulation platform with the task upstream trains it for (`Isaac-Reorient-Cube-Leap`, in-hand cube reorientation; <https://github.com/leap-hand/LEAP_Hand_Isaac_Lab>), keeping the stock configuration so settings could be copied from the published project.
 
@@ -27,18 +27,32 @@
 
 **Evaluation (new, identical for all):** `scripts/eval_leap.py --adr_increments {0, 25}` — ADR **frozen** (`min_rot_adr_coeff = 1e9`), 1024 envs, 600 control steps (20 s), eval seed 1234, metric rotations / 20 s / hand, plus joint speed and effort. *Nominal* = 0 increments; *full DR* = 25 increments (the full native range). **Why frozen:** at eval the ADR criterion could otherwise advance the difficulty mid-evaluation, giving every policy a different test. The older `LEAP_500.json` was evaluated unfrozen and is not comparable (its re-evaluation under the frozen protocol is `LEAP_L1_s42_nominal`: 7.527 vs the original 7.517 — near-identical, a useful consistency check).
 
-## 3. Results so far (single seed — **do not interpret as findings**)
+## 3. Results (3 seeds per condition, rotations per 20 s per hand, ADR frozen at evaluation)
 
-| Cond (seed 42) | trained rotations/20 s nominal (ADR=0) | full DR (ADR=25) | mean joint speed (nom / DR) | effort (nom / DR) | final train reward |
-|---|---|---|---|---|---|
-| L0 (no ADR) | **10.88** | 0.92 | 2.17 / 2.20 rad/s | 0.607 / 0.528 | > 100,000 (early-stop threshold) |
-| L1 (native ADR) | 7.53 | 0.86 | 1.86 / 2.07 | 0.696 / 0.591 | 84,254 |
-| L2 (warm-start 8) | *pending* | *pending* | | | 36,728 at epoch 500 |
+| Condition | Nominal (ADR = 0) | Full DR (ADR = 25) | per-seed nominal (42, 123, 7) | per-seed full DR |
+|---|---|---|---|---|
+| L0 — native ADR off | 8.42 ± 2.22 | 0.56 ± 0.31 | 10.88, 6.57, 7.80 | 0.92, 0.37, 0.38 |
+| L1 — native ADR (upstream) | 8.68 ± 2.76 | 0.75 ± 0.12 | 7.53, 11.83, 6.68 | 0.86, 0.79, 0.62 |
+| L2 — ADR warm-start at 8/25 | 8.00 ± 2.11 | 1.53 ± 1.20 | 5.68, 9.80, 8.52 | 0.60, 1.11, 2.89 |
 
-What these numbers say, carefully:
-- **Nominal:** the no-ADR policy rotates more (10.9 vs 7.5) at nominal difficulty. That is expected: L1 spent its training budget on increasingly hard physics; L0 on the easy case. This mirrors the 2-DOF finding that adaptive/wide DR costs nominal performance.
-- **Full DR:** *both* policies collapse to ≈ 0.9 rotations per 20 s at 25 increments — about a 12× drop for L0 and 8.8× for L1. After only 500 iterations, native ADR (which reached 8 of 25 increments) does not produce a policy that survives the full randomization range; the difference between L0 and L1 there (0.92 vs 0.86) is within what noise would produce. So **500 iterations is probably too short to show an ADR benefit** — a limitation of the design, to be stated in any write-up.
-- The L2 training reward (36,728) is far below L1's (84,254) because it trains at a harder fixed starting difficulty; its frozen-eval numbers will show whether that investment pays at full DR.
+Exact permutation tests (3 vs 3; the smallest attainable two-sided p is 0.10):
+
+| contrast | nominal diff (p) | full-DR diff (p) |
+|---|---|---|
+| L1 − L0 | +0.26 (0.90) | +0.19 (0.40) |
+| L2 − L1 | −0.68 (0.70) | +0.78 (0.40) |
+| L2 − L0 | −0.42 (0.80) | +0.98 (0.20) |
+
+Secondary measures (mean over 3 seeds): joint speed ≈ 2.0 rad/s for all conditions at both difficulties (no difference); **control effort per joint** nominal L0 0.60 ± 0.02, L1 0.72 ± 0.02, L2 0.65 ± 0.07; full DR 0.52, 0.57, 0.60. Effort for L1 exceeds L0 in 3 of 3 seeds with complete separation (nominal 0.70/0.71/0.74 vs 0.61/0.58/0.61) — the minimum possible p for 3 vs 3 (0.10), so directional only.
+
+**What this means, carefully**
+1. **No condition effect can be claimed.** Every contrast has p ≥ 0.20; seed-to-seed spread inside a condition (2–3 rotations, e.g. L1 nominal 6.68–11.83) is larger than every between-condition difference. The single-seed impression after seed 42 (L0 ≫ L1) vanished when seeds were added: it was seed variance — the same lesson as on the 2-DOF track.
+2. **At full randomization every policy collapses** (0.6–1.5 rotations per 20 s versus ≈ 8–9 at nominal, a ≈ 6–15× drop). Training for 500 iterations — during which native ADR advanced only to about 8 of 25 increments — does not produce a policy that survives the full range, regardless of how DR was handled. The L2 mean of 1.53 is driven by one seed (2.89); the other two (0.60, 1.11) are in the same band as L0/L1.
+3. **ADR-trained policies spend more control effort** at equal speed (0.72 vs 0.60), consistent with training under actuator/action noise; whether this matters for hardware is untested.
+4. **Budget is the main limitation.** 500 iterations is short relative to the published LEAP training; ADR's benefit presupposes training long enough to advance through the increments. These results therefore do **not** test whether ADR helps; they show that at this budget ADR neither helps nor hurts measurably.
+5. **Consistency check on the evaluation:** re-evaluating the original 16 Sep checkpoint under the new frozen protocol gave 7.527 rotations vs the original unfrozen 7.517 — the frozen protocol reproduces the earlier number.
+
+**Value for the report.** (i) The native-ADR confound (the stock "baseline" was an ADR run); (ii) a controlled demonstration that seed variance dominates at this budget; (iii) a frozen-difficulty evaluation protocol for LEAP; (iv) a specified next experiment (longer budgets, precision-aware ADR criterion — doc 13).
 
 ## 4. What went wrong while running it unattended (and what each failure was *actually*)
 
@@ -53,11 +67,12 @@ This sequence is documented because misdiagnosis cost hours.
 
 **Persistence design.** Launched with `setsid nohup` and a user crontab (`@reboot` + every 15 min) so it resumes after a disconnect or reboot; the `flock` prevents overlap. Truthful limits: if the machine is *powered off* the job stops until it boots; an interrupted training run restarts from scratch (or from its last 50-epoch checkpoint if resumed manually); the queue idles whenever other users' jobs occupy the GPU/host RAM. Observed in practice: after a host reboot at ≈ 10:49 on 13 Oct the cron `@reboot` entry restarted the queue automatically.
 
-## 5. Planned analysis (when finished)
+## 5. Caveats specific to these runs
 
-- Table: mean ± std rotations/20 s per condition at ADR = 0 and ADR = 25, with per-seed values; exact permutation tests only for n = 3 (min attainable two-sided p = 2/20 = 0.10 for 3 vs 3 — **significance at conventional levels is impossible with 3 seeds**, so differences must be large and consistent across seeds to be discussed).
-- Report separately: (a) L0 vs L1 at nominal, (b) L1 vs L2 at full DR, (c) joint speed/effort.
-- State plainly that L2 is an ADR warm-start, not RAPP, and that 500 iterations is short relative to LEAP's published training.
+- L0 seed 42 was assembled from early-stop/resume cycles (epochs 272 → 331 → 384 → 500) and L1 seed 123 resumed once from an epoch-250 checkpoint after a kill (return code 137, cause unknown). Resuming restarts optimizer/environment state; if any single-seed number looks like an outlier, this is a candidate cause. Neither run is an outlier in the final table (L0 s42 is the highest L0 nominal, 10.88, but L1 s123 at 11.83 is higher).
+- L1 seed 42 is the 16 Sep run (upstream early-stop threshold was never reached, so identical to a 500-iteration run); L0 runs hit the upstream early-stop threshold at 272–384 epochs unless it was disabled (it was disabled for all new runs).
+- L2 is an ADR warm-start proxy, **not RAPP**.
+- 3 seeds cannot reach p < 0.10 on any contrast, by construction.
 
 ## 6. Open questions for this track (see doc 13)
 

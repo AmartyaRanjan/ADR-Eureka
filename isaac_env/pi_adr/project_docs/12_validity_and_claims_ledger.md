@@ -63,7 +63,8 @@
 | 30 | `LEAP_500` is a no-DR baseline | Stock config assumed | Read config; TensorBoard `num_adr_increases` 0 → 8 of 25, `adr_criteria` peak 0.315 | Native ADR was active | **RETRACTED** (relabelled) |
 | 31 | LEAP already ships adaptive DR | Code reading | Verified in TensorBoard of the actual run | Confirmed | CONFIRMED |
 | 32 | "Queue failures = host-RAM OOM" | Free RAM ≈ 0 | Per-attempt logs: rc = 0, "Network won!" | Wrong; upstream `score_to_win` early stop | **RETRACTED** |
-| 33 | L0 vs L1 vs L2 comparison | Seed 42 only so far: nominal 10.88 vs 7.53; full DR 0.92 vs 0.86 | — | Single seed | **PENDING** |
+| 33 | L0 vs L1 vs L2 differ | Seed 42: nominal 10.88 vs 7.53 (L0 ≫ L1) | 3 seeds each, frozen-ADR evaluation, exact permutation | Nominal 8.42 / 8.68 / 8.00 (p ≥ 0.70); full DR 0.56 / 0.75 / 1.53 (p ≥ 0.20); seed spread > condition gaps; L2's full-DR mean is one seed | **NOT SUPPORTED** (seed-42 impression retracted); min attainable p is 0.10 |
+| 33b | ADR-trained LEAP policies use more control effort | L1 0.72 vs L0 0.60 per joint | 3/3 seeds separate (complete separation) | Directional (p = 0.10 is the minimum for n=3) | SUPPORTED (weak) |
 
 ## 7. Pipeline-integrity claims
 

@@ -1,0 +1,12 @@
+nominal rotations_per_20s_per_env: L0 [10.88, 6.57, 7.8] mean 8.42±2.22 | L1 [7.53, 11.83, 6.68] mean 8.68±2.76 | L2 [5.68, 9.8, 8.52] mean 8.00±2.11
+nominal mean_joint_velocity_rad_s: L0 [2.17, 1.96, 1.93] mean 2.02±0.13 | L1 [1.86, 2.28, 1.95] mean 2.03±0.22 | L2 [1.67, 2.16, 2.17] mean 2.00±0.28
+nominal mean_control_effort_per_joint: L0 [0.61, 0.58, 0.61] mean 0.60±0.02 | L1 [0.7, 0.71, 0.74] mean 0.72±0.02 | L2 [0.66, 0.57, 0.71] mean 0.65±0.07
+  nominal L1-L0: diff +0.26  perm p=0.90
+  nominal L2-L1: diff -0.68  perm p=0.70
+  nominal L2-L0: diff -0.42  perm p=0.80
+fullDR rotations_per_20s_per_env: L0 [0.92, 0.37, 0.38] mean 0.56±0.31 | L1 [0.86, 0.79, 0.62] mean 0.75±0.12 | L2 [0.6, 1.11, 2.89] mean 1.53±1.20
+fullDR mean_joint_velocity_rad_s: L0 [2.2, 1.73, 2.07] mean 2.00±0.24 | L1 [2.07, 2.26, 1.77] mean 2.03±0.25 | L2 [1.74, 2.04, 1.96] mean 1.91±0.16
+fullDR mean_control_effort_per_joint: L0 [0.53, 0.5, 0.54] mean 0.52±0.02 | L1 [0.59, 0.56, 0.56] mean 0.57±0.02 | L2 [0.58, 0.57, 0.65] mean 0.60±0.04
+  fullDR L1-L0: diff +0.19  perm p=0.40
+  fullDR L2-L1: diff +0.78  perm p=0.40
+  fullDR L2-L0: diff +0.98  perm p=0.20

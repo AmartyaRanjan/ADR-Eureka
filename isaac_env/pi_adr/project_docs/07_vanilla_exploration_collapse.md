@@ -57,3 +57,8 @@ The original Stage-1 narrative ("the discovered reward fixes the precision failu
 | Mechanism check (entropy trace) | σ retained ≈ 30× more with entropy 0.02 |
 | Multi-seed matched-budget replication | Effect on precision **not** replicated; tail effect suggestive only (p = 0.071) |
 | Verdict | The *mechanism* (collapse under long training) is credible; the *magnitude* claimed in V1 was inflated by comparing unequal budgets |
+
+
+## 6. UPDATE (14 Oct 2026): E1 resolved the open question
+
+The long-run test recommended above was run as the pre-registered experiment E1 (doc 16; results doc 21): vanilla reward, 5000 iterations, entropy 0.005 vs 0.02, 5 seeds each. **At 5000 iterations entropy 0.02 beats the default on mean error (30.4 ± 3.1 vs 61.8 ± 22.4 mm) and worst-decile error (66 vs 346 mm), p = 0.0079 for both** (complete separation); the default arm's 2 cm success falls from 29.0 % at 800 iterations to 15.2 % at 5000 in 5 of 5 seeds; final action entropy is −3.5…−4.5 (default) vs −0.6…+2.2 (0.02). So the section-3 conclusion is now settled in the direction anticipated there: *the collapse is real and is a training-length effect; entropy 0.02 prevents it; at 800 iterations it has not yet occurred.* The residual gap to Stage 1's reported 98 %/80 % precision remains unexplained (best E1 arm: ≈ 25 % at 2 cm).

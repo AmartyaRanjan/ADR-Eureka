@@ -2,6 +2,8 @@
 
 Working code for the second-stage research plan (`2DOF_Physics_Informed_Adaptive_DR_Research_Roadmap`).
 
+**New to the project? Start with `project_docs/20_START_HERE_project_explained_from_scratch.md`.**
+
 **Full written documentation of the whole project (why/what/findings/validation, 15 files): `project_docs/00_INDEX.md`.**
 
 **Start here if picking this project up:** `PROJECT_STATUS_AND_ROADMAP.md` — current state, what's

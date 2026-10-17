@@ -6,6 +6,8 @@
 
 ---
 
+**New to the project? Read `20_START_HERE_project_explained_from_scratch.md` first** (a plain-language guided tour that assumes only basic RL knowledge).
+
 ## 1. The project in one paragraph
 
 Stage 1 (a prior report) claimed that a reward discovered by an LLM (Eureka) reaches a goal quickly but loses fine precision, while a human-designed reward keeps millimetre precision. Stage 2 (this work) proposed a pipeline — **Eureka reward → RAPP physics envelope → PINN physics observer → adaptive domain randomization (DR)** — and an ablation matrix of eight configurations (rungs A–G). We built an independent 2-DOF reaching benchmark in Isaac Lab, validated it against analytic physics, ran the matrix with 5 seeds per rung, built a physics observer and a PINN-informed adaptive DR controller, and began a parallel LEAP Hand study. The honest outcome so far is a **carefully controlled set of mostly negative results**: no reward or DR variant reliably beat the simple baselines on tail/precision metrics; Stage 1's headline reward comparison does not hold at matched budget; the PINN-informed controller did not beat a shuffled-information placebo. The durable contributions are the validated benchmark, the evaluation/statistics protocol, the defect discoveries, the RAPP sensitivity map, the PINN identifiability analysis, and the discovery that LEAP already ships adaptive DR.
@@ -28,6 +30,9 @@ Stage 1 (a prior report) claimed that a reward discovered by an LLM (Eureka) rea
 | 12 | `12_validity_and_claims_ledger.md` | Claim-by-claim: what was claimed, how it was tested, whether it survived |
 | 13 | `13_open_questions_and_further_plan.md` | What is unproven, the research-level plan, publication assessment |
 | 14 | `14_reproduction_and_file_map.md` | Commands, file map, run naming, compute notes |
+| 15–19 | `15_plan_for_a_positive_result.md`, `16…19_*_preregistration.md` | The plan and the four pre-registrations (E1, E2, E4 step-0, E5) |
+| 20 | `20_START_HERE_project_explained_from_scratch.md` | Beginner guide to the whole project |
+| 21 | `21_E1_to_E5_results.md` | Results of the pre-registered experiments (E1 positive; E2/E4/E5 nulls) |
 | 15 | `15_plan_for_a_positive_result.md` | Proposed experiments (E1–E5) to earn a genuine "success" for the paper: reasoning, pre-declared criteria, costs, schedule, outcomes |
 
 ## 3. Headline findings and how far to trust them
@@ -43,9 +48,12 @@ Confidence legend: **High** = replicated across ≥5 seeds and/or checked agains
 | 5 | Adaptive DR without RAPP's envelope (E) sacrifices coarse success at nominal physics | 5 cm: 80.4 ± 12.7 % vs D 97.5 ± 0.8 %, p=0.008 (complete separation, all 5 seeds) | High |
 | 6 | No adaptive-DR variant (F4, E) beats static DR on mean/tail error | F4−D mean err +6.96 mm (p=0.37); E−D −10.2 mm DRtrain (p=0.15) | Medium (n=5; underpowered for small effects) |
 | 7 | PINN observer: accuracy good inside its training range, unreliable outside; uncertainty weakly tracks error; mass/effectiveness degeneracy partly broken by sequential single-joint steady-state excitation | interp acc RMSE 1.95 rad/s²; extrap 7.73; rank corr +0.27 / −0.16 | Medium |
-| 8 | PINN-informed adaptive DR (G) is not demonstrably better than a shuffled-information placebo | clean 6 seeds, DRshift worst-decile p=0.147; nominal/DRtrain p ≥ 0.74 | Medium (rerun of 4 seeds queued) |
+| 8 | PINN-informed adaptive DR (G) is not demonstrably better than a shuffled-information placebo | 10 clean seeds per arm, DRshift worst-decile (pre-declared primary) 221 vs 392 mm, p = 0.109; nominal/DRtrain p ≥ 0.48 | Medium (direction favours G in 8/10 seeds but not significant) |
 | 9 | LEAP Hand already ships native adaptive DR; the stock "baseline" was not a no-DR baseline | num_adr_increases 0 → 8 of 25 over 500 iters | High (read from TensorBoard) |
 | 10 | LEAP matrix (no ADR / native ADR / warm-started ADR), 3 seeds | nominal 8.42 / 8.68 / 8.00 rotations per 20 s (p ≥ 0.70); full DR 0.56 / 0.75 / 1.53 (p ≥ 0.20): no condition effect, seed variance dominates, all policies collapse at full DR | High that *no large effect exists at this budget*; budget too short to test ADR |
+| 11 | **E1 (pre-registered): long-run exploration collapse** — with the default entropy coefficient the human-reward policy degrades with longer training; entropy 0.02 prevents it | 5000 iterations: mean error 61.8 ± 22.4 vs 30.4 ± 3.1 mm, worst-decile 346 vs 66 mm, p = 0.0079 (both); 2 cm declines in 5/5 seeds; DRshift also better | **High** (5 seeds, pre-registered, mechanism measured) |
+| 12 | Pre-registered nulls: Eureka learns no faster than the human reward (E5, p = 0.84); LEAP quality does not collapse before quantity (E4 step-0, 0/3 conditions); LEAP robustness curve does not separate conditions (E2) | doc 21 | Medium |
+| 13 | Exploratory: warm-started LEAP ADR (L2) drops the cube 5–10× less at ADR ≥ 10 (all seeds) | doc 21 | **Low** (3 seeds, post hoc) |
 
 ## 4. Claims we retracted (details in `12_validity_and_claims_ledger.md`)
 
@@ -62,7 +70,7 @@ Confidence legend: **High** = replicated across ≥5 seeds and/or checked agains
 |---|---|---|---|
 | 15 Sep | Eval recorded post-reset distance | 0.39 % vs true 93 % | Fixed (`horizon−2`) |
 | 15 Sep | Damping override 0 vs 0.05; ±π joint trap; mass write skipped at 1.0; PINN label noise | See doc 04 | Fixed, verified |
-| 12–13 Oct | Concurrent G/placebo runs shared a timestamp-named run directory (seeds 3–6) | Cross-arm checkpoint mixing; seed 4 arms evaluated the identical file | Quarantined; clean n=6 reported; rerun queued |
+| 12–14 Oct | Concurrent G/placebo runs shared a timestamp-named run directory (seeds 3–6); later one rerun was truncated at 600/800 iterations by a transient evaluation failure | Cross-arm checkpoint mixing; seed 4 arms evaluated the identical file | Quarantined; cleanly rerun with sequential arms (audit passed); 10 clean seeds per arm |
 | 12–13 Oct | LEAP queue "failures" | First: real GPU OOM from other users; later: upstream early stop (`score_to_win`) misread as failures | Queue rewritten; early stop disabled for matched budget |
 
 ## 6. Glossary

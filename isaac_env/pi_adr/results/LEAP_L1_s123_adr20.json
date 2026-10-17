@@ -1,0 +1,19 @@
+{
+  "checkpoint": "/data/home/amartyaranjan888/projects/I/isaac_env/LEAP_Hand_Isaac_Lab/logs/rl_games/leap_hand_reorient/2026-10-13_17-42-21/nn/last_leap_hand_reorient_ep_500_rew_141740.81.pth",
+  "control_steps": 600,
+  "eval_adr_increments_frozen": 20,
+  "eval_seed": 1234,
+  "mean_abs_action": 0.6790499091148376,
+  "mean_control_effort_per_joint": 0.5730617642402649,
+  "mean_joint_velocity_rad_s": 2.2531604766845703,
+  "note": "E2 robustness curve ADR=20",
+  "num_envs": 1024,
+  "rotations_per_20s_per_env": 1.31805419921875,
+  "rotations_per_env": 1.31805419921875,
+  "run_name": "LEAP_L1_s123_adr20",
+  "sim_seconds_per_env": 20.0,
+  "task": "Isaac-Reorient-Cube-Leap",
+  "timestamp": "2026-10-14T10:10:42",
+  "total_goal_reaches": 21595.0,
+  "z_rotation_steps": 16
+}

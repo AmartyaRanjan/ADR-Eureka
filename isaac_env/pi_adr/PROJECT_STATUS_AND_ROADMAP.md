@@ -4,7 +4,7 @@
 > Full tables + permutation tests: `results/MATRIX_A_to_G.md`; authoritative narrative: `EXPERIMENT_LOG.md` (11 Oct afternoon entry).
 > - A, B, C indistinguishable on mean error / tail in all evals (p≥0.18). Static DR (D) lowers 2 cm success vs B under DRtrain/DRshift (p=0.016).
 > - E (no RAPP) loses nominal 5 cm success vs D (80.4 vs 97.5%, p=0.008); its tail/mean advantage is NOT significant. F4 does not beat D.
-> - G (PINN-scaled widening) has the lowest mean/worst-decile error and spread in every eval but G−F4 is not significant and G has the lowest 2 cm/1 cm success. The shuffled-multiplier placebo (n=5) matches G on nominal/DRtrain (p>=0.74); the DRshift signal (p=0.024 at n=5) did not replicate in the 6 clean seeds (worst decile p=0.147; seeds 3–6 of the 10-seed retest were contaminated and are being rerun — see EXPERIMENT_LOG 13 Oct). Rung G: no demonstrated PINN benefit. Observer uncertainty was dominated by damping scale and is unreliable outside its training range.
+> - G (PINN-scaled widening) has the lowest mean/worst-decile error and spread in every eval but G−F4 is not significant and G has the lowest 2 cm/1 cm success. The shuffled-multiplier placebo (n=5) matches G on nominal/DRtrain (p>=0.74); the DRshift signal (p=0.024 at n=5) was not significant in the final clean 10-seed retest (worst decile p=0.109; seeds 3–6 of the first retest were contaminated and were cleanly rerun — see EXPERIMENT_LOG 14 Oct). Rung G: no demonstrated PINN benefit. Observer uncertainty was dominated by damping scale and is unreliable outside its training range.
 > - Still untested: LEAP hand (deferred), longer budgets, placebo at n=5 (done: see log 12 Oct), a reliable-extrapolation observer.
 
 

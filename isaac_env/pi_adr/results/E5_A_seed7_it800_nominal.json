@@ -1,0 +1,52 @@
+{
+  "extra": {
+    "checkpoint": "logs/rl_games/two_dof_reach/2026-10-10_22-36-20/nn/last_two_dof_reach_ep_800_rew_1295.4564.pth",
+    "domain_rand": {
+      "actuator_effectiveness_range": [
+        1.0,
+        1.0
+      ],
+      "enabled": false,
+      "joint_damping_scale_range": [
+        1.0,
+        1.0
+      ],
+      "joint_friction_range": [
+        0.0,
+        0.0
+      ],
+      "link_mass_scale_range": [
+        1.0,
+        1.0
+      ]
+    },
+    "eval_seed": 1234,
+    "eval_wall_clock_s": 8.22,
+    "note": "E5 sample efficiency A seed 7 iter 800",
+    "num_envs": 4096,
+    "reward_variant": "vanilla",
+    "task": "PIADR-TwoDofReach-Vanilla-v0",
+    "timestamp": "2026-10-14T18:15:12"
+  },
+  "max_joint_velocity_rad_s": 5.148240566253662,
+  "mean_abs_action": 0.45073121786117554,
+  "mean_control_effort": 0.6971506476402283,
+  "mean_joint_velocity_rad_s": 2.0247292518615723,
+  "mean_overshoot_m": 0.13542009890079498,
+  "mean_settling_time_s": 1.0414307117462158,
+  "mean_terminal_error_m": 0.034164439886808395,
+  "median_terminal_error_m": 0.027041465044021606,
+  "metrics_version": "1.0.0",
+  "num_episodes": 4096,
+  "p90_terminal_error_m": 0.03862093389034271,
+  "run_name": "E5_A_seed7_it800_nominal",
+  "success_rate": {
+    "0.001": 0.001220703125,
+    "0.002": 0.002197265625,
+    "0.005": 0.016357421875,
+    "0.01": 0.08154296875,
+    "0.02": 0.304931640625,
+    "0.05": 0.98876953125
+  },
+  "worst_decile_error_m": 0.12456752359867096
+}

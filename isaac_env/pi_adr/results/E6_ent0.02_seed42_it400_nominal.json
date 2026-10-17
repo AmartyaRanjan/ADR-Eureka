@@ -1,0 +1,52 @@
+{
+  "extra": {
+    "checkpoint": "logs/rl_games/two_dof_reach/2026-10-15_16-41-04/nn/last_two_dof_reach_ep_400_rew_27281.072.pth",
+    "domain_rand": {
+      "actuator_effectiveness_range": [
+        1.0,
+        1.0
+      ],
+      "enabled": false,
+      "joint_damping_scale_range": [
+        1.0,
+        1.0
+      ],
+      "joint_friction_range": [
+        0.0,
+        0.0
+      ],
+      "link_mass_scale_range": [
+        1.0,
+        1.0
+      ]
+    },
+    "eval_seed": 1234,
+    "eval_wall_clock_s": 5.66,
+    "note": "E6 ent=0.02 seed=42 iter=400 nominal",
+    "num_envs": 4096,
+    "reward_variant": "eureka",
+    "task": "PIADR-TwoDofReach-Eureka-v0",
+    "timestamp": "2026-10-15T18:21:21"
+  },
+  "max_joint_velocity_rad_s": 5.1481828689575195,
+  "mean_abs_action": 0.7327800989151001,
+  "mean_control_effort": 1.3138401508331299,
+  "mean_joint_velocity_rad_s": 2.963737726211548,
+  "mean_overshoot_m": 0.12992598116397858,
+  "mean_settling_time_s": 2.6623616218566895,
+  "mean_terminal_error_m": 0.04644784331321716,
+  "median_terminal_error_m": 0.029932506382465363,
+  "metrics_version": "1.0.0",
+  "num_episodes": 4096,
+  "p90_terminal_error_m": 0.050863973796367645,
+  "run_name": "E6_ent0.02_seed42_it400_nominal",
+  "success_rate": {
+    "0.001": 0.002197265625,
+    "0.002": 0.006591796875,
+    "0.005": 0.0283203125,
+    "0.01": 0.096435546875,
+    "0.02": 0.34033203125,
+    "0.05": 0.88330078125
+  },
+  "worst_decile_error_m": 0.2150992602109909
+}

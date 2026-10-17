@@ -59,8 +59,21 @@ Each item: **what happened, why it mattered, how it was detected, how it was fix
 - **Detection (red-flag audit):** G seed 4 and Gplacebo seed 4 produced *byte-identical* nominal and DR metrics.
 - **Cause:** the two arms (chain13 and chain14) were launched concurrently. Isaac Lab/rl_games names run directories `YYYY-MM-DD_HH-MM-SS`. When both arms started a chunk in the same second they wrote into the same directory, and `find_checkpoint()` located the checkpoint by glob in that directory, so it could return the other arm's file, which the next chunk resumed from. For seed 4, both arms' **final** checkpoint path was literally the same file.
 - **Extent (full audit of all final-checkpoint paths and every adaptive chunk's experiment name):** 8 shared-directory chunks, all in seeds 3, 4, 5, 6. Seeds 42/123/7/1/2 (arms ran at different times) and seed 8 had none; static runs had none.
-- **Resolution:** contaminated results moved to `results/_quarantine_contaminated_retest_20261012/`; retest recomputed on the 6 clean seeds; clean rerun of seeds 3–6 with arms run **sequentially** queued (`logs/chain15_retest_rerun.log`). The earlier "n=10, p=0.281" text is superseded everywhere.
+- **Resolution:** contaminated results moved to `results/_quarantine_contaminated_retest_20261012/`; clean rerun of seeds 3–6 with arms run **sequentially** (`logs/chain15_retest_rerun.log`), re-audited with no collisions. The earlier "n=10, p=0.281" text is superseded; the final clean 10-seed result is p = 0.109 (doc 10).
 - **Lesson:** two runs must never share a timestamp-keyed directory; identical results across arms are a defect signal.
+
+### D7b — A transient evaluation failure silently truncated a run (14 Oct)
+- **Detection:** while compiling the clean retest, `Gplacebo_seed6_nominal` was missing; its log showed `AttributeError: 'NoneType' object has no attribute 'create_articulation_view'` (a transient Isaac Sim start-up error). The run log showed the same error in the *per-step evaluation after chunk 5*, and `run_adaptive_dr.py` then reported "5 outer steps" and evaluated the epoch-**600** checkpoint as if it were final.
+- **Why it mattered:** the DR evaluations for that seed were of an under-trained policy and would have been included in the 10-seed comparison with no visible warning (the checkpoint path and run name looked normal).
+- **Fix:** results quarantined (`results/_quarantine_truncated_Gplacebo_seed6_20261014/`), full run repeated (chain16, ep_800 verified); a check of every `*_final_checkpoint.txt` found no other truncated runs.
+- **Lesson / to do:** the orchestrator should retry a failed evaluation and verify that the final checkpoint's epoch equals the target before evaluating; add this check to the post-batch audit.
+
+### D7c — Silent invalid evaluations from a failed simulator start-up (14 Oct)
+- **Detection:** a provisional look at E1 showed a 73 **metre** mean terminal error for one checkpoint (entropy 0.005, seed 7, iteration 800), with joint velocity exactly 0 and saturated actions.
+- **Cause:** a transient PhysX start-up failure ("direct-GPU API not initialised") that did not crash the evaluation; the arm never moved and a result file was written anyway. The retry loop treated the existing file as success.
+- **Extent:** full scan of 326 result files (zero mean joint velocity, or mean error > 1.5 m): only 2 invalid files (iterations 800 and 3000 of that one run); the whole earlier project is clean.
+- **Fix:** both quarantined and re-evaluated (valid); a `valid_eval.py` plausibility check now follows every evaluation in the E1/E4/E5 scripts (invalid → delete and retry).
+- **Lesson:** check that an evaluation physically happened, not merely that it produced a file.
 
 ### D8 — Misinterpreting the LEAP early stop as crashes (and a wrong OOM hypothesis)
 Covered in doc 11: upstream `score_to_win: 100000` stops training when reward passes 100 k; the queue logged this as failure. An intermediate hypothesis ("host-RAM OOM kills") was circumstantial and **wrong**; it was retracted in the log.

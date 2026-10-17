@@ -4,8 +4,8 @@
 
 | # | Question | Why it matters | What would settle it | Cost |
 |---|---|---|---|---|
-| 1 | **Finish the clean G/placebo rerun (seeds 3–6)** | Repairs the contaminated retest; fixes power | `chain15` queued behind LEAP (sequential arms) | ≈ 4 h GPU |
-| 2 | **Finish LEAP at 3 seeds** (L0/L1/L2) | Only real-platform evidence; needed for any robotics venue | `leap_queue.sh` (running) | ≈ 6–7 h more |
+| 1 | ~~Finish the clean G/placebo rerun (seeds 3–6)~~ **DONE 14 Oct** | 10 clean seeds per arm: DRshift worst-decile p = 0.109 (not significant) | chain15 + chain16 | done |
+| 2 | ~~Finish LEAP at 3 seeds~~ **DONE 13 Oct** | Null at 500 iterations (doc 11); longer budgets needed | — | done |
 | 3 | **Does the entropy collapse explain vanilla's long-run failure?** | Decides how much of Stage 1's discrepancy is an artifact | Vanilla at 5000 iterations × 5 seeds, entropy 0.005 vs 0.02 | ≈ 7 h (5 × 79 min × 2 / lanes) |
 | 4 | **Why does static DR lower 2 cm precision vs no-DR (B vs D)?** | Mechanism candidate: no-DR policies are forced slower by harsh evaluation physics | Record mean |q̇|/effort per seed; evaluate B/D under an intermediate DR sweep; slow-down control (cap speed) | ≈ 2 h |
 | 5 | **Is the observer uncertainty usable out of range?** | G's null is a weak test (damping-dominated, anti-correlated extrapolation) | Better calibration (full covariance, deep-ensemble recalibration, conformal), an observer retrained across seeds | days |
@@ -62,3 +62,10 @@
 - Re-verify the two unchecked citations in the roadmap.
 - Rotate the Gemini API key that was pasted into chat during setup.
 - Archive: results JSONs, `index.jsonl`, logs, checkpoints needed for the headline numbers, and the quarantine directory.
+
+
+## UPDATE 14 Oct 2026 — after E1/E2/E4/E5 (see doc 21)
+- **Resolved:** open question #3 (does entropy collapse explain vanilla's long-run failure?) — **yes** (E1, p = 0.0079, 5/5 seeds, mechanism measured).
+- **Closed as negative:** precision-aware ADR for LEAP (E4 step-0: no quality-before-quantity gap; not built); "Eureka learns faster" (E5, p = 0.84).
+- **New, highest-value next steps:** (a) a pre-registered *confirmatory* test of the exploratory LEAP observation that warm-started ADR (L2) drops the cube 5–10× less at ADR ≥ 10 — 5 additional seeds each for L1 and L2 (≈ 10 GPU-hours), primary metric falls per 20 s at ADR 15 and 20; (b) replicate E1 on a second task or with the Eureka reward to test generality; (c) E1 variants (entropy schedules, other coefficients).
+- **Paper framing now:** lead with E1 (explanatory success), the validation protocol and audit trail as the methodological contribution, and the pre-declared nulls as honest supporting evidence.

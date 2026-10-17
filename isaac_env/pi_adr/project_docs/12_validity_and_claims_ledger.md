@@ -20,7 +20,7 @@
 | 7 | Eureka reward is coarse-success dominated (high 5 cm, low 2/1 cm) | Stage-1 report; seed 42 reproduction (96.97 / 25.56 / 3.59 %) | n = 5 matched-budget runs (B): 5 cm 98.98 ± 0.76, 2 cm 26.87 ± 6.26, 1 cm 7.92 ± 2.07 % | Pattern holds in every seed | CONFIRMED |
 | 8 | Eureka beats the human reward at every threshold | Single seed; vanilla 5000 vs Eureka 1500 iterations | Matched 800 iterations, n = 5 per reward, exact permutation | Mean err 37.75 vs 37.69 mm (p = 0.98); 2 cm 28.99 vs 26.87 % (p = 0.56) | **RETRACTED** |
 | 9 | Vanilla fails to reproduce Stage 1's 98 % @ 2 cm | 13.28 % @ 2 cm at 5000 iters | Cross-check at several budgets (200–5000) and with entropy probes; matched n = 5 | Vanilla ≈ 29 % @ 2 cm at 800 iterations; never near 98 % | CONFIRMED (our setup cannot reproduce); cause of discrepancy **open** |
-| 10 | The vanilla gap is due to entropy collapse | V1 (entropy 0.02): 97.83 / 17.36 / 3.91 %, 3.3× fewer iterations; V2 (reward change) no help | Single-variable isolation; then n = 5 at matched 800 iterations | At matched budget entropy has no significant effect on precision (p ≥ 0.18; worst-decile 149 → 93 mm, p = 0.071) | Collapse mechanism SUPPORTED; "entropy fixes precision" **INCONCLUSIVE/overstated** |
+| 10 | The vanilla gap is due to entropy collapse (**now RESOLVED by E1, see rows 37–38**) | V1 (entropy 0.02): 97.83 / 17.36 / 3.91 %, 3.3× fewer iterations; V2 (reward change) no help | Single-variable isolation; then n = 5 at matched 800 iterations | At matched budget entropy has no significant effect on precision (p ≥ 0.18; worst-decile 149 → 93 mm, p = 0.071) | Collapse mechanism SUPPORTED; "entropy fixes precision" **INCONCLUSIVE/overstated** |
 | 11 | Harder physics raises fine precision of no-DR policies | Eureka @1500 2 cm 26.4 → 42.4 % under shifted DR (single seed; "vanilla shows no such effect") | n = 5 paired by seed for both rewards | 5/5 seeds improve for A **and** B (sign test one-sided p = 0.031 each); the original statement that vanilla does not show it is **wrong** at 800 iterations | CONFIRMED (direction, both rewards); mechanism (slow-down) untested |
 
 ## 3. RAPP claims
@@ -53,7 +53,7 @@
 | 25 | Removing RAPP's ceiling costs nominal coarse success | E seed 42: 65.11 % | n = 5, per-seed values | E below D in 5/5 seeds, complete separation, p = 0.008 | CONFIRMED |
 | 26 | RAPP's ceiling limits that cost | F4 vs E | n = 5 | F4−E nominal 5 cm +13.7 points, p = 0.040 | SUPPORTED |
 | 27 | Static DR hurts fine precision for the Eureka reward when evaluated under DR | D vs B | n = 5, exact permutation, per-seed | 2 cm DRtrain 40.8 → 21.4 %, DRshift 43.2 → 19.8 % (p = 0.016 both); B > D in 5/5 seeds | SUPPORTED (p near minimum attainable; not mechanism-tested) |
-| 28 | PINN-informed adaptive DR (G) beats F4 / static | G lowest mean/tail error and variance | Placebo, pre-declared primary metric, retest | G ≈ placebo at nominal/DRtrain (p ≥ 0.74); DRshift p 0.024 (5 seeds) → 0.147 (6 clean) | **NOT SUPPORTED** |
+| 28 | PINN-informed adaptive DR (G) beats F4 / static | G lowest mean/tail error and variance | Placebo, pre-declared primary metric, retest | G ≈ placebo at nominal/DRtrain (p ≥ 0.74); DRshift worst-decile p 0.024 (5 seeds) → 0.109 (10 clean seeds, pre-declared primary); direction favours G in 8/10 seeds but not significant | **NOT SUPPORTED** (weak directional hint on DRshift only) |
 | 29 | A reward/DR variant improves tail error robustly | Various single-seed hints | 150-test matrix with exact permutation | Nothing survives multiplicity correction; n = 5 cannot reach Bonferroni thresholds | INCONCLUSIVE |
 
 ## 6. LEAP claims
@@ -70,8 +70,9 @@
 
 | # | Claim | Test | Outcome |
 |---|---|---|---|
-| 34 | Matrix seeds are independent between rungs | Audit of all final-checkpoint paths and adaptive chunk experiment names | Seeds 42/123/7/1/2 clean; **G/Gp seeds 3–6 contaminated** (shared timestamped run directories); quarantined; rerun queued |
-| 35 | The 10-seed G-vs-placebo retest (p = 0.281) | Red flag: identical G/Gp numbers at seed 4 | Retest used contaminated seeds; clean n = 6 gives p = 0.147; verdict unchanged | **SUPERSEDED** |
+| 34 | Matrix seeds are independent between rungs | Audit of all final-checkpoint paths and every adaptive chunk's experiment name | Seeds 42/123/7/1/2 clean; **G/Gp seeds 3–6 first contaminated** (shared timestamped run directories) → quarantined → cleanly rerun with sequential arms; re-audit: no collisions | CONFIRMED (after repair) |
+| 35 | The 10-seed G-vs-placebo retest (p = 0.281) | Red flag: identical G/Gp numbers at seed 4 | Contaminated; superseded by the clean 10-seed retest: DRshift worst-decile p = 0.109 | **SUPERSEDED** |
+| 36 | Every adaptive run trained its full 800 iterations | Final-checkpoint epoch check across all runs | One violation: Gplacebo seed 6 truncated at ep_600 after a transient evaluation failure; quarantined and repeated (ep_800 verified) | CONFIRMED (after repair) |
 
 ## 8. How to read the whole ledger
 
@@ -79,3 +80,10 @@
 - **What is *suggestive* but unproven:** static DR lowering 2 cm precision (p = 0.016, n = 5), RAPP's ceiling effect, G's tail advantage.
 - **What was claimed and withdrawn:** reward superiority, F4 and E wins, entropy "fix" magnitude, G's DRshift signal, the LEAP baseline label.
 - **Meta-lesson:** all three *positive* adaptive-DR findings came from one seed and each disappeared on replication; each replication was triggered by an explicit "do not claim until multi-seeded" rule. The final results are therefore stronger *because* they are mostly null.
+
+| 37 | **E1:** at 5000 iterations the default-entropy human-reward policy is worse than an entropy-0.02 policy, because exploration collapses with training | 800-iteration null (p ≥ 0.18); Stage-1 long run 13.28 % @ 2 cm; entropy trace 2.83 → −4.66 | Pre-registered 5 seeds × 2 arms, 5000 iterations, evaluated at 6 checkpoints; exact permutation; sensitivity excluding resumed runs; mechanism (action entropy) and DRshift check | Mean error 61.8 ± 22.4 vs 30.4 ± 3.1 mm, worst-decile 346 vs 66 mm, p = 0.0079 both (complete separation); 2 cm declines in 5/5 seeds (sign p = 0.031); final action entropy −3.5…−4.5 vs −0.6…+2.2; DRshift p = 0.0079; sensitivity p = 0.018 | **CONFIRMED** (pre-registered; explanatory success) |
+| 38 | E1 generalises beyond the human reward / task | — | — | Not tested (human reward, 2-DOF only) | UNTESTED |
+| 39 | **E5:** the Eureka reward learns faster than the human reward | Hypothesis (same final quality, maybe earlier) | Pre-registered learning-curve area of mean error over 6 checkpoints, 5 seeds each | A 40.75 vs B 41.43 mm, p = 0.84; opposite direction; error at 100 iterations A 39.8 vs B 57.2 mm (p = 0.29) | **NOT SUPPORTED** (null on speed as well as final quality) |
+| 40 | **E2/E4-step0:** LEAP ADR's quantity gate hides a quality collapse (precision-aware ADR worth building) | 2-DOF coarse-gate failure | Pre-registered rule on falls vs rotations at frozen ADR levels, 9 checkpoints × 6 levels | 0 of 3 conditions show quality degrading before quantity; falls and rotations change together; E4 not built | **NOT SUPPORTED** |
+| 41 | Warm-started ADR (L2) makes LEAP policies drop the cube less under hard physics | Seen after the diagnostic (not pre-registered): L2 below every L0/L1 seed at ADR 10, 15, 20, 25 (e.g. ADR 20: 0.23 vs 1.27/1.78 falls per 20 s) | — (3 seeds; minimum attainable p = 0.10 per level) | Hypothesis only | **EXPLORATORY** (needs a confirmatory run) |
+| 42 | Evaluation results are physically valid | Full plausibility audit (417 files) + rotation-reproduction check | 4 invalid files found (silent sim start-up failures) and replaced from the same checkpoints; none remain | CONFIRMED (after repair) |

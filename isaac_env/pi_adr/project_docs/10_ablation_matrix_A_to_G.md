@@ -101,18 +101,34 @@ where u_d is the frozen observer's epistemic variance for that dimension's param
 - chain13 (G) and chain14 (Gp) ran **concurrently**. Run directories are timestamp-named to the second. Whenever both arms started a chunk in the same second, they wrote to the same directory; `find_checkpoint()` globs that directory and could return the other arm's checkpoint, which the next chunk then resumed from.
 - Audit of all `*_final_checkpoint.txt` and every adaptive chunk's experiment name: **8 shared-directory chunks, all in seeds 3, 4, 5, 6** (seed 3 chunks 0–2; seed 4 chunks 5 and 7; seed 5 chunk 0; seed 6 chunks 0–1). Seed 4's final checkpoint path is the same file for both arms (`…/2026-10-12_17-15-03/nn/last_two_dof_reach_ep_800_rew__27182.79_.pth`). Seeds 42/123/7/1/2 and 8 have no collisions, and no static run collided.
 
-**Repair.** Contaminated seeds 3–6 moved to `results/_quarantine_contaminated_retest_20261012/`. Recomputed on the **6 clean seeds** (42, 123, 7, 1, 2, 8), `results/G_vs_placebo_retest_clean_n6.txt`:
+**Repair, step 1.** Contaminated seeds 3–6 were moved to `results/_quarantine_contaminated_retest_20261012/`. On the 6 clean seeds (42, 123, 7, 1, 2, 8) DRshift worst-decile was G 250.7 ± 194.7 vs Gp 487.1 ± 307.5 mm (p = 0.147).
 
-| DRshift (n = 6 vs 6) | G | Gp | diff | p |
+**Repair, step 2 — clean rerun of seeds 3–6 (14 Oct).** G then placebo were run **sequentially** (chain15). A new audit found no run-directory collisions anywhere, and every adaptive run ends at epoch 800 — *except* one: a transient Isaac Sim start-up error (`create_articulation_view` on `None`) hit the per-step evaluation after chunk 5 of **Gplacebo seed 6**; `run_adaptive_dr.py` aborted at 600 of 800 iterations and went on to evaluate the epoch-600 checkpoint. That seed's results were quarantined (`results/_quarantine_truncated_Gplacebo_seed6_20261014/`) and the full run repeated (chain16; verified ep_800, no collisions).
+
+**Final result — 10 seeds per arm, all clean** (`results/G_vs_placebo_retest_clean_n10.txt`; exact permutation test, C(20,10) = 184,756 labelings):
+
+| DRshift (n = 10 vs 10) | G | Gp | diff | p |
 |---|---|---|---|---|
-| worst-decile (mm) — PRIMARY | 250.7 ± 194.7 | 487.1 ± 307.5 | −236.4 | **0.147** |
-| mean err (mm) | 53.0 ± 19.4 | 88.3 ± 55.1 | −35.3 | 0.169 |
-| 5 cm % | 96.97 ± 2.46 | 91.16 ± 8.03 | +5.8 | 0.104 |
-| 2 cm % | 13.39 ± 4.56 | 14.45 ± 13.89 | −1.1 | 0.885 |
+| worst-decile (mm) — **PRIMARY, pre-declared** | 221.4 ± 151.4 | 391.8 ± 280.8 | −170.4 | **0.109** |
+| mean err (mm) | 50.3 ± 15.2 | 73.5 ± 46.4 | −23.2 | 0.146 |
+| 5 cm % | 97.27 ± 1.97 | 93.59 ± 6.82 | +3.7 | 0.111 |
+| 2 cm % | 12.68 ± 4.51 | 14.52 ± 11.04 | −1.8 | 0.659 |
 
-Nominal (n = 6): worst-decile 88.2 vs 80.9 (p = 0.76), mean err 34.9 vs 33.4 (p = 0.50). A clean rerun of seeds 3–6 with the two arms **run sequentially** is queued behind the LEAP jobs (`logs/chain15_retest_rerun.log`, writes the same file names; the contaminated copies are already in quarantine). Whatever it shows will be appended to `EXPERIMENT_LOG.md`.
+| nominal (n = 10 vs 10) | G | Gp | p |
+|---|---|---|---|
+| worst-decile (mm) | 88.4 ± 38.9 | 80.2 ± 37.2 | 0.635 |
+| mean err (mm) | 33.9 ± 5.2 | 32.4 ± 3.8 | 0.479 |
+| 5 cm % | 93.97 ± 3.83 | 95.13 ± 2.90 | 0.453 |
 
-**Interpretation.** The direction favours G on DRshift tail metrics throughout (−125 to −236 mm worst-decile), but the effect is not significant, shrinks as clean seeds are added, depends on the placebo's high variance (a few terrible placebo seeds, e.g. seed 8: worst-decile 996.5 mm; seed 1: 715.3), and is absent at nominal/DRtrain. **Verdict: no demonstrated benefit of PINN information; rung G is closed as inconclusive-negative on this task**, pending the rerun, which can change power but not the ceiling imposed by the weak observer signal.
+| DRtrain (n = 10 vs 10) | G | Gp | p |
+|---|---|---|---|
+| worst-decile (mm) | 71.8 ± 23.2 | 71.9 ± 30.6 | 0.996 |
+| mean err (mm) | 33.8 ± 2.7 | 32.8 ± 4.0 | 0.538 |
+| 5 cm % | 99.34 ± 0.67 | 99.46 ± 0.37 | 0.701 |
+
+Per-seed DRshift worst-decile (mm), seeds 42, 123, 7, 1, 2, 3, 4, 5, 6, 8: **G** 229, 217, 129, 191, 103, 158, 207, 208, 137, 635; **Gp** 424, 275, 307, 715, 204, 218, 109, 153, 515, 997. G is lower than its placebo in 8 of 10 seeds (a sign test, one-sided p = 0.055, two-sided 0.109, matching the permutation result) — a consistent direction, but not significant at the pre-declared threshold, and G and Gp are *identical* on nominal and DRtrain.
+
+**Interpretation.** The primary pre-declared test is **not significant (p = 0.109)**. The direction favours G on DRshift tail metrics in all three secondary measures and in 8 of 10 seeds, and the effect size (about −170 mm worst-decile, ≈ 0.7 pooled SD) is not trivial; a larger sample might reach significance, but the data in hand do not support the claim. Two facts keep this a **weak** hypothesis rather than a finding: (1) the placebo arm carries a few very bad seeds (997, 715, 515 mm), so the gap is partly driven by placebo variance; (2) there is no corresponding benefit at nominal or DRtrain, where the observer's information would be equally relevant. **Verdict: no demonstrated benefit of PINN information; rung G is closed as inconclusive/negative-leaning on this task.** If one more experiment were run on this question it should be the oracle-information ablation described in `15_plan_for_a_positive_result.md` (E3), which would separate "weak observer" from "information does not help".
 
 ## 6. Why the placebo design was worth it
 
@@ -124,6 +140,7 @@ Without Gp, G's lower tail error and lower seed variance (DRtrain mean err 33.6 
 |---|---|
 | Matrix seeds 42/123/7/1/2 are independent per rung | Verified (no shared directories; per-seed distinct values) |
 | Metrics identical protocol across rungs | Verified (same scripts, same eval seed) |
-| G/Gp seeds 3–6 | **Contaminated**, quarantined, rerun queued |
+| G/Gp seeds 3–6 | Contaminated first time; quarantined; **cleanly rerun** (sequential arms, audit passed) |
+| Gplacebo seed 6 first rerun | Truncated at 600/800 iterations by a transient sim start-up error; quarantined and repeated (verified ep_800) |
 | G's multipliers carry physics information | Weak: dominated by one dimension; placebo equals G |
 | Observer reliability outside its training range | Poor (rank corr −0.16) |
